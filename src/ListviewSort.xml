@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget id="com.mendix.widget.custom.ListviewSort.ListviewSort" offlineCapable="true" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>Listview sort</name>
+    <description>Sort Mendix list views using a single-field sort</description>
+    <icon></icon>
+    <properties>
+        <property key="targetGridName" type="string" required="false">
+            <caption>List view name</caption>
+            <category>Data source</category>
+            <description>The name of the grid on this page</description>
+        </property>
+        <property key="sortAttributes" type="object" isList="true" required="false">
+            <caption>Sort attributes</caption>
+            <category>Data source</category>
+            <description>The sort attributes on the sort entity</description>
+            <properties>
+                <property key="caption" type="string" required="false">
+                    <caption>Attribute caption</caption>
+                    <category>Attribute</category>
+                    <description></description>
+                </property>
+                <property key="name" type="string" required="false">
+                    <caption>Attribute name</caption>
+                    <category>Attribute</category>
+                    <description>Attribute on the list view datasource entity or list view sort entity</description>
+                </property>
+                <property key="order" type="enumeration" defaultValue="asc">
+                    <caption>Sort order</caption>
+                    <category>Attribute</category>
+                    <description></description>
+                    <enumerationValues>
+                        <enumerationValue key="asc">Ascending</enumerationValue>
+                        <enumerationValue key="desc">Descending</enumerationValue>
+                    </enumerationValues>
+                </property>
+            </properties>
+        </property>
+        <property key="caption" type="translatableString" required="false">
+            <caption>Caption</caption>
+            <category>Appearance</category>
+            <description>Specifies a short hint that describes the expected value of the sort dropdown field</description>
+            <translations>
+                <translation lang="en_US"></translation>
+                <translation lang="nl_NL"></translation>
+            </translations>
+        </property>
+    </properties>
+</widget>
