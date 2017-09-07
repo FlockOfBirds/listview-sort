@@ -70,7 +70,7 @@ describe("Alert", () => {
         const alert = shallow(createElement(Alert, { bootstrapStyle: "danger", message, className }));
 
         expect(alert).toBeElement(
-            createElement("div", { className: "alert alert-danger widget-offline-search" }, message)
+            createElement("div", { className: "alert alert-danger widget-dropdown-sort" }, message)
         );
     });
 });

@@ -25,7 +25,6 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
 
         this.state = { attribute: "", id: "", order: "asc" };
         this.updateSort = this.updateSort.bind(this);
-        this.resetQuery = this.resetQuery.bind(this);
     }
 
     render() {
@@ -75,9 +74,5 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
 
         this.props.onDropdownChangeAction(attribute, order);
         this.setState({ attribute, order });
-    }
-
-    private resetQuery() {
-        this.setState({ attribute: "", order: "" });
     }
 }
