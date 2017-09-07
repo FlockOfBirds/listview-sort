@@ -3,26 +3,26 @@ import { findDOMNode } from "react-dom";
 
 import { Dropdown } from "./components/Dropdown";
 import { ValidateConfigs } from "./components/ValidateConfigs";
-import { CommonProps, ListviewSortProps, ListviewSortState, parseStyle } from "./utils/ContainerUtils";
+import { CommonProps, DropdownSortProps, DropdownSortState, parseStyle } from "./utils/ContainerUtils";
 
 declare function require(name: string): string;
 
 // tslint:disable-next-line class-name
-export class preview extends Component<ListviewSortProps, ListviewSortState> {
-    constructor(props: ListviewSortProps) {
+export class preview extends Component<DropdownSortProps, DropdownSortState> {
+    constructor(props: DropdownSortProps) {
         super(props);
 
-        this.state = { findingWidget: true };
+        this.state = { findingListviewWidget: true };
     }
 
     render() {
-        return createElement("div", { className: "widget-offline-search" },
+        return createElement("div", { className: "widget-dropdown-sort" },
             createElement(ValidateConfigs, {
-                ...this.props as ListviewSortProps,
+                ...this.props as DropdownSortProps,
                 inWebModeler: true,
                 queryNode: this.state.targetNode,
-                targetGrid: this.state.targetGrid,
-                validate: !this.state.findingWidget
+                targetListview: this.state.targetListview,
+                validate: !this.state.findingListviewWidget
             }),
             createElement(Dropdown, {
                 ...this.props as CommonProps,
@@ -36,21 +36,21 @@ export class preview extends Component<ListviewSortProps, ListviewSortState> {
         this.validateConfigs(this.props);
     }
 
-    componentWillReceiveProps(newProps: ListviewSortProps) {
+    componentWillReceiveProps(newProps: DropdownSortProps) {
         this.validateConfigs(newProps);
     }
 
-    private validateConfigs(props: ListviewSortProps) {
+    private validateConfigs(props: DropdownSortProps) {
         const routeNode = findDOMNode(this) as HTMLElement;
-        const targetNode = ValidateConfigs.findTargetNode(props, routeNode);
+        const targetNode = ValidateConfigs.findTargetNode(props.targetListviewName, routeNode);
 
         if (targetNode) {
             this.setState({ targetNode });
         }
-        this.setState({ findingWidget: true });
+        this.setState({ findingListviewWidget: true });
     }
 }
 
 export function getPreviewCss() {
-    return require("./ui/ListviewSort.css");
+    return require("./ui/DropdownSort.css");
 }

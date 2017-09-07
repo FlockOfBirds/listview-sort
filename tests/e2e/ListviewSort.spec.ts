@@ -1,4 +1,4 @@
-describe("ListviewSort", () => {
+describe("DropdownSort", () => {
     it("when dropdown is selected the list view should be sorted", () => {
         //
     });

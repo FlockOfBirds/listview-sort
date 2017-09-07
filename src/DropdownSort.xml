@@ -1,28 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget id="com.mendix.widget.custom.ListviewSort.ListviewSort" offlineCapable="true" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/">
-    <name>Listview sort</name>
+<widget id="com.mendix.widget.custom.dropdownsort.DropdownSort" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>Dropdown sort</name>
     <description>Sort Mendix list views using a single-field sort</description>
     <icon></icon>
     <properties>
+        <property key="entity" type="entity">
+            <caption>List view entity</caption>
+            <category>Data source</category>
+            <description>Entity whose attributes will be sorted. This entity should match the list view entity</description>
+        </property>
         <property key="targetGridName" type="string" required="false">
             <caption>List view name</caption>
             <category>Data source</category>
-            <description>The name of the grid on this page</description>
+            <description>The name of the list view on this page. It is optional</description>
         </property>
         <property key="sortAttributes" type="object" isList="true" required="false">
             <caption>Sort attributes</caption>
             <category>Data source</category>
-            <description>The sort attributes on the sort entity</description>
+            <description></description>
             <properties>
                 <property key="caption" type="string" required="false">
-                    <caption>Attribute caption</caption>
+                    <caption>Caption</caption>
                     <category>Attribute</category>
                     <description></description>
                 </property>
-                <property key="name" type="string" required="false">
+                <property key="name" type="attribute" required="false" entityProperty="../entity">
                     <caption>Attribute name</caption>
                     <category>Attribute</category>
                     <description>Attribute on the list view datasource entity or list view sort entity</description>
+                    <attributeTypes>
+                        <attributeType name="String"/>
+                        <attributeType name="Integer"/>
+                        <attributeType name="Decimal"/>
+                        <attributeType name="Boolean"/>
+                        <attributeType name="DateTime"/>
+                        <attributeType name="Enum"/>
+                        <attributeType name="Long"/>
+                    </attributeTypes>
                 </property>
                 <property key="order" type="enumeration" defaultValue="asc">
                     <caption>Sort order</caption>
@@ -33,16 +47,12 @@
                         <enumerationValue key="desc">Descending</enumerationValue>
                     </enumerationValues>
                 </property>
+                <property key="isDefaultSort" type="boolean" defaultValue="false">
+                    <caption>Default sort</caption>
+                    <category>Attribute</category>
+                    <description>if non is selected or other attributes are set to true, the widget will select the first</description>
+                </property>
             </properties>
-        </property>
-        <property key="caption" type="translatableString" required="false">
-            <caption>Caption</caption>
-            <category>Appearance</category>
-            <description>Specifies a short hint that describes the expected value of the sort dropdown field</description>
-            <translations>
-                <translation lang="en_US"></translation>
-                <translation lang="nl_NL"></translation>
-            </translations>
         </property>
     </properties>
 </widget>

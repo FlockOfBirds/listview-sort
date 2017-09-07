@@ -3,34 +3,25 @@ export interface CommonProps {
     sortAttributes: Array<{ name: string, caption: string, order: string }>;
 }
 
-export interface ListviewSortProps extends CommonProps {
+export interface DropdownSortProps extends CommonProps {
     class?: string;
     mxform: mxui.lib.form._FormBase;
-    targetGridName: string;
+    targetListviewName: string;
     style: string;
 }
-export interface ListviewSortState {
+export interface DropdownSortState {
     alertMessage?: string;
-    targetGrid?: ListView;
+    targetListview?: ListView;
     targetNode?: HTMLElement;
-    findingWidget: boolean;
+    findingListviewWidget: boolean;
     validationPassed?: boolean;
 }
 
-type HybridConstraint = Array<{ attribute: string; operator: string; value: string; path?: string; }>;
-
 export interface ListView extends mxui.widget._WidgetBase {
     _datasource: {
-        _constraints: HybridConstraint | string;
         _entity: string;
-        _setSize: number;
         _sorting: string[][];
-        atEnd: () => boolean;
-        _pageSize: number;
     };
-    _loadMore: () => void;
-    _onLoad: () => void;
-    _renderData: () => void;
     update: () => void;
 }
 

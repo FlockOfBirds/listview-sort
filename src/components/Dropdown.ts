@@ -16,7 +16,6 @@ interface DropdownType extends OptionHTMLAttributes<HTMLOptionElement> {
 }
 
 export class Dropdown extends Component<DropdownProps, DropdownState> {
-
     constructor(props: DropdownProps) {
         super(props);
 
@@ -26,50 +25,34 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
     }
 
     render() {
-        return createElement("div", { className: "dropdown" },
-            createElement("label", { className: "caption" }, this.props.caption + ": ",
-                createElement("select", {
-                    className: "option",
+        return createElement("div", { className: "form-group" },
+            createElement("select", {
+                    className: "form-control",
                     onChange: this.updateSort
-                }, this.createOptions()),
-                createElement("button",
-                    {
-                        className: `btn-transparent ${this.state.attribute ? "visible" : "hidden"}`,
-                        onClick: this.resetQuery
-                    },
-                    createElement("span", { className: "glyphicon glyphicon-remove" })
-                )
-            )
+                },
+                this.createOptions())
         );
     }
 
-    componentDidUpdate(_prevProps: DropdownProps, prevState: DropdownState) {
-        if ((this.state.attribute !== prevState.attribute) || (this.state.order !== prevState.order)) {
-            setTimeout(() => {
-                this.props.onDropdownChangeAction(this.state.attribute, this.state.order);
-            }, 500);
-        }
-    }
-
     private createOptions(): Array<ReactElement<{}>> {
-        const optionElements: Array<ReactElement<{}>> = [];
-        if (this.props.sortAttributes.length) {
-            this.props.sortAttributes.map((optionObject) => {
-                const { name, caption, order } = optionObject;
-                const optionValue: DropdownType = {
-                    className: "",
-                    label: caption,
-                    order,
-                    value: name
-                };
-                optionElements.push(createElement("option", optionValue));
-            });
-        }
-        return optionElements;
+        return this.props.sortAttributes.map((optionObject) => {
+            const { name, caption, order } = optionObject;
+            const optionValue: DropdownType = {
+                className: "",
+                label: caption,
+                order,
+                value: name
+            };
+            return createElement("option", optionValue);
+        });
     }
 
     private updateSort(event: FormEvent<HTMLSelectElement>) {
-        this.setState({ attribute: event.currentTarget.value, order: event.currentTarget.selectedOptions[0].getAttribute("order") });
+        const order = event.currentTarget.selectedOptions[0].getAttribute("order");
+        const attribute = event.currentTarget.value;
+
+        this.props.onDropdownChangeAction(attribute, order);
+        this.setState({ attribute, order });
     }
 
     private resetQuery() {

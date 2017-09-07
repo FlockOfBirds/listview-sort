@@ -1,6 +1,6 @@
 {
-  "name": "listview-sort",
-  "widgetName": "ListviewSort",
+  "name": "dropdown-sort",
+  "widgetName": "DropdownSort",
   "version": "1.0.0",
   "description": "Search Mendix List views using a single-field search",
   "copyright": "Mendix BV",
@@ -26,11 +26,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/mendixlabs/listview-sort"
+    "url": "https://github.com/mendixlabs/dropdown-sort"
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/mendixlabs/listview-sort/issues"
+    "url": "https://github.com/mendixlabs/dropdown-sort/issues"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.1",
@@ -38,7 +38,7 @@
     "@types/enzyme": "^2.8.6",
     "@types/jasmine": "^2.5.53",
     "@types/karma": "^0.13.36",
-    "@types/react": "^16.0.0",
+    "@types/react": "^15.6.1",
     "@types/react-dom": "^15.5.3",
     "@types/webdriverio": "^4.8.2",
     "check-dependencies": "^1.1.0",
