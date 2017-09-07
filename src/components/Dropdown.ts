@@ -8,18 +8,22 @@ export interface DropdownProps extends CommonProps {
 
 export interface DropdownState {
     attribute: string;
+    id: string;
     order: string;
 }
 
-interface DropdownType extends OptionHTMLAttributes<HTMLOptionElement> {
+export interface DropdownType extends OptionHTMLAttributes<HTMLOptionElement> {
     order: string;
 }
 
 export class Dropdown extends Component<DropdownProps, DropdownState> {
+    private defaultAttribute: string;
+    private defaultOrder: string;
+
     constructor(props: DropdownProps) {
         super(props);
 
-        this.state = { attribute: "", order: "asc" };
+        this.state = { attribute: "", id: "", order: "asc" };
         this.updateSort = this.updateSort.bind(this);
         this.resetQuery = this.resetQuery.bind(this);
     }
@@ -34,17 +38,35 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
         );
     }
 
+    componentDidMount() {
+        this.props.onDropdownChangeAction(this.defaultAttribute, this.defaultOrder);
+        this.setState({ attribute: this.defaultAttribute, order: this.defaultAttribute });
+    }
+
     private createOptions(): Array<ReactElement<{}>> {
-        return this.props.sortAttributes.map((optionObject) => {
-            const { name, caption, order } = optionObject;
+        let foundDefaultSortOption;
+        const dropDownOptions = this.props.sortAttributes.map((optionObject) => {
+            const { name, caption, isDefaultSort, order } = optionObject;
             const optionValue: DropdownType = {
                 className: "",
                 label: caption,
                 order,
+                selected: isDefaultSort && !foundDefaultSortOption,
                 value: name
             };
+            if (isDefaultSort) {
+                foundDefaultSortOption = true;
+                this.defaultAttribute = name;
+                this.defaultOrder = order;
+            }
             return createElement("option", optionValue);
         });
+        if (!foundDefaultSortOption && this.props.sortAttributes.length > 0) {
+            this.defaultAttribute = this.props.sortAttributes[0].name;
+            this.defaultOrder = this.props.sortAttributes[0].order;
+        }
+
+        return dropDownOptions;
     }
 
     private updateSort(event: FormEvent<HTMLSelectElement>) {

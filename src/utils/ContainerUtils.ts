@@ -1,6 +1,5 @@
 export interface CommonProps {
-    caption: string;
-    sortAttributes: Array<{ name: string, caption: string, order: string }>;
+    sortAttributes: Array<{ name: string, caption: string, isDefaultSort: boolean, order: string }>;
 }
 
 export interface DropdownSortProps extends CommonProps {
