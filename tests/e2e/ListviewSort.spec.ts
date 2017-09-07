@@ -1,9 +1,14 @@
-describe("DropdownSort", () => {
-    it("when dropdown is selected the list view should be sorted", () => {
-        //
-    });
+import page from "./pages/home.page";
 
-    it("when a dropdown is changed. list view sort order should change", () => {
-        //
+const testValue = "Red light";
+
+describe("DropdownSort", () => {
+    it("when dropdown is rendered the list view should be sorted by default", () => {
+        page.open();
+        page.dropdownSort.waitForVisible();
+        page.listViewFirstItem.waitForVisible();
+
+        const itemValue = page.listViewFirstItem.getHTML();
+        expect(itemValue).toContain(testValue);
     });
 });
