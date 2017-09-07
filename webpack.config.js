@@ -9,7 +9,7 @@ const widgetConfig = {
     entry: `./src/components/${widgetName}Container.ts`,
     output: {
         path: path.resolve(__dirname, "dist/tmp"),
-        filename: `src/com/mendix/widget/custom/${widgetName}/${widgetName}.js`,
+        filename: `src/com/mendix/widget/custom/dropdownsort/${widgetName}.js`,
         libraryTarget: "umd"
     },
     resolve: {
@@ -33,7 +33,7 @@ const widgetConfig = {
         new CopyWebpackPlugin([
             { from: "src/**/*.xml" },
         ], { copyUnmodified: true }),
-        new ExtractTextPlugin({ filename: `./src/com/mendix/widget/custom/${widgetName}/ui/${widgetName}.css` }),
+        new ExtractTextPlugin({ filename: `./src/com/mendix/widget/custom/dropdownsort/ui/${widgetName}.css` }),
         new webpack.LoaderOptionsPlugin({ debug: true })
     ]
 };
