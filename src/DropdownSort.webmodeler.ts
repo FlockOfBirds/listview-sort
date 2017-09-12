@@ -3,13 +3,16 @@ import { findDOMNode } from "react-dom";
 
 import { Dropdown } from "./components/Dropdown";
 import { ValidateConfigs } from "./components/ValidateConfigs";
-import { CommonProps, DropdownSortProps, DropdownSortState, parseStyle } from "./utils/ContainerUtils";
+import {
+    DropdownSortState, WrapperProps, createOptionProps,
+    parseStyle
+} from "./utils/ContainerUtils";
 
 declare function require(name: string): string;
 
 // tslint:disable-next-line class-name
-export class preview extends Component<DropdownSortProps, DropdownSortState> {
-    constructor(props: DropdownSortProps) {
+export class preview extends Component<WrapperProps, DropdownSortState> {
+    constructor(props: WrapperProps) {
         super(props);
 
         this.state = { findingListviewWidget: true };
@@ -18,15 +21,15 @@ export class preview extends Component<DropdownSortProps, DropdownSortState> {
     render() {
         return createElement("div", { className: "widget-dropdown-sort" },
             createElement(ValidateConfigs, {
-                ...this.props as DropdownSortProps,
+                ...this.props as WrapperProps,
                 inWebModeler: true,
                 queryNode: this.state.targetNode,
                 targetListview: this.state.targetListview,
                 validate: !this.state.findingListviewWidget
             }),
             createElement(Dropdown, {
-                ...this.props as CommonProps,
                 onDropdownChangeAction: () => { return; },
+                options: createOptionProps(this.props.sortAttributes),
                 style: parseStyle(this.props.style)
             })
         );
@@ -36,11 +39,11 @@ export class preview extends Component<DropdownSortProps, DropdownSortState> {
         this.validateConfigs(this.props);
     }
 
-    componentWillReceiveProps(newProps: DropdownSortProps) {
+    componentWillReceiveProps(newProps: WrapperProps) {
         this.validateConfigs(newProps);
     }
 
-    private validateConfigs(props: DropdownSortProps) {
+    private validateConfigs(props: WrapperProps) {
         const routeNode = findDOMNode(this) as HTMLElement;
         const targetNode = ValidateConfigs.findTargetNode(props.targetListviewName, routeNode);
 

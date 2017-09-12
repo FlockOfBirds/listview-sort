@@ -1,9 +1,9 @@
 import { Component, createElement } from "react";
 
 import { Alert } from "./Alert";
-import { DropdownSortProps, ListView } from "../utils/ContainerUtils";
+import { ListView, WrapperProps } from "../utils/ContainerUtils";
 
-export interface ValidateConfigProps extends DropdownSortProps {
+export interface ValidateConfigProps extends WrapperProps {
     inWebModeler?: boolean;
     queryNode?: HTMLElement;
     targetListview?: ListView;
@@ -64,7 +64,7 @@ export class ValidateConfigs extends Component<ValidateConfigProps, {}> {
     }
 
     static findTargetNode(targetGridName: string, queryNode: HTMLElement): HTMLElement | null {
-        let targetNode: HTMLElement | null = null ;
+        let targetNode: HTMLElement | null = null;
 
         while (!targetNode && queryNode) {
             targetNode = targetGridName

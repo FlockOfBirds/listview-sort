@@ -1,13 +1,15 @@
-export interface CommonProps {
-    sortAttributes: Array<{ name: string, caption: string, isDefaultSort: boolean, order: string }>;
-}
+import { DropdownOptionType } from "../components/Dropdown";
 
-export interface DropdownSortProps extends CommonProps {
-    class?: string;
+export interface AttributeType { name: string; caption: string; isDefaultSort: boolean; order: string; }
+
+export interface WrapperProps {
+    sortAttributes: AttributeType[];
+    "class"?: string;
     mxform: mxui.lib.form._FormBase;
     targetListviewName: string;
     style: string;
 }
+
 export interface DropdownSortState {
     alertMessage?: string;
     targetListview?: ListView;
@@ -24,9 +26,15 @@ export interface ListView extends mxui.widget._WidgetBase {
     update: () => void;
 }
 
-export const parseStyle = (style = ""): {[key: string]: string} => {
+export const createOptionProps = (sortAttributes: AttributeType[]): DropdownOptionType[] => sortAttributes.map((optionObject, index) => {
+    const { name, caption, isDefaultSort, order } = optionObject;
+    const value = `${name}-${index}`;
+    return { name, caption, isDefaultSort, order, value };
+});
+
+export const parseStyle = (style = ""): { [key: string]: string } => {
     try {
-        return style.split(";").reduce<{[key: string]: string}>((styleObject, line) => {
+        return style.split(";").reduce<{ [key: string]: string }>((styleObject, line) => {
             const pair = line.split(":");
             if (pair.length === 2) {
                 const name = pair[0].trim().replace(/(-.)/g, match => match[1].toUpperCase());

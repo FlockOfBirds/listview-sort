@@ -7,13 +7,13 @@ import * as dojoConnect from "dojo/_base/connect";
 
 import { Dropdown, DropdownProps } from "./Dropdown";
 import { ValidateConfigs } from "./ValidateConfigs";
-import { CommonProps, ListView, DropdownSortProps, DropdownSortState, parseStyle } from "../utils/ContainerUtils";
+import { DropdownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
 import "../ui/DropdownSort.css";
 
-export default class DropdownSort extends Component<DropdownSortProps, DropdownSortState> {
+export default class DropdownSort extends Component<WrapperProps, DropdownSortState> {
     private navigationHandler: object;
 
-    constructor(props: DropdownSortProps) {
+    constructor(props: WrapperProps) {
         super(props);
 
         this.state = {
@@ -31,7 +31,7 @@ export default class DropdownSort extends Component<DropdownSortProps, DropdownS
                 style: parseStyle(this.props.style)
             },
             createElement(ValidateConfigs, {
-                ...this.props as DropdownSortProps,
+                ...this.props as WrapperProps,
                 queryNode: this.state.targetNode,
                 targetListview: this.state.targetListview,
                 targetListviewName: this.props.targetListviewName,
@@ -48,8 +48,8 @@ export default class DropdownSort extends Component<DropdownSortProps, DropdownS
     private renderDropdown(): ReactElement<DropdownProps> {
         if (this.state.validationPassed) {
             return createElement(Dropdown, {
-                ...this.props as CommonProps,
                 onDropdownChangeAction: this.updateSort,
+                options: createOptionProps(this.props.sortAttributes),
                 style: parseStyle(this.props.style)
             });
         }
@@ -71,7 +71,7 @@ export default class DropdownSort extends Component<DropdownSortProps, DropdownS
                 }
             }
             const validateMessage = ValidateConfigs.validate({
-                ...this.props as DropdownSortProps,
+                ...this.props as WrapperProps,
                 queryNode: targetNode,
                 targetListview: targetGrid,
                 targetListviewName: this.props.targetListviewName,

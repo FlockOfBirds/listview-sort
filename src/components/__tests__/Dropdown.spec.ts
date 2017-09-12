@@ -1,41 +1,45 @@
 import { shallow } from "enzyme";
-import { createElement } from "react";
+import { OptionHTMLAttributes, createElement } from "react";
 
-import { Dropdown, DropdownProps, DropdownType } from "../Dropdown";
-import { parseStyle } from "../../utils/ContainerUtils";
+import { Dropdown, DropdownProps } from "../Dropdown";
+import { createOptionProps, parseStyle } from "../../utils/ContainerUtils";
 
 describe("Dropdown", () => {
+
     const renderDropdown = (props: DropdownProps) => shallow(createElement(Dropdown, props));
+
     const dropDownProps: DropdownProps = {
-        onDropdownChangeAction:  jasmine.any(Function) as any,
-        sortAttributes: [
+        onDropdownChangeAction: jasmine.any(Function) as any,
+        options: createOptionProps([
             { caption: "Name Asc", name: "Name", isDefaultSort: true, order: "asc" },
             { caption: "Name Desc", name: "Name", isDefaultSort: false, order: "desc" },
             { caption: "Code Desc", name: "Code", isDefaultSort: false, order: "desc" }
-        ],
+        ]),
         style: parseStyle("html{}")
     };
+
     const createOptions = (props: DropdownProps) => {
-        const foundDefaultSortOption = false;
-        return props.sortAttributes.map((optionObject) => {
-            const { name, caption, isDefaultSort, order } = optionObject;
-            const optionValue: DropdownType = {
+        return props.options.map((optionObject) => {
+            const { caption, value, isDefaultSort } = optionObject;
+            const optionValue: OptionHTMLAttributes<HTMLOptionElement> = {
                 className: "",
                 label: caption,
-                order,
-                selected: isDefaultSort && !foundDefaultSortOption,
-                value: name
+                selected: isDefaultSort,
+                value
             };
             return createElement("option", optionValue);
         });
     };
 
     it("renders the structure correctly", () => {
-        const dropDown = renderDropdown(dropDownProps);
+        const wrapper = renderDropdown(dropDownProps);
 
-        expect(dropDown).toBeElement(
+        expect(wrapper).toBeElement(
             createElement("div", { className: "form-group" },
-                createElement("select", { className: "form-control", onChange: jasmine.any(Function) as any },
+                createElement("select", {
+                    className: "form-control",
+                    onChange: jasmine.any(Function) as any
+                },
                     createOptions(dropDownProps)
                 )
             )
@@ -45,29 +49,14 @@ describe("Dropdown", () => {
     it("renders with the specified default sort", () => {
         const props: DropdownProps = {
             ...dropDownProps,
-            sortAttributes: [
+            options: createOptionProps([
                 { caption: "Name Asc", name: "Name", isDefaultSort: false, order: "asc" },
                 { caption: "Name Desc", name: "Name", isDefaultSort: true, order: "desc" }
-            ]
+            ])
         };
 
-        const dropDown = renderDropdown(props);
-        const option = dropDown.find("option").at(1);
-
-        expect(option.prop("selected")).toBe(true);
-    });
-
-    it("renders with first option selected if default sort is not specified", () => {
-        const props: DropdownProps = {
-            ...dropDownProps,
-            sortAttributes: [
-                { caption: "Name Asc", name: "Name", isDefaultSort: false, order: "asc" },
-                { caption: "Code Desc", name: "Code", isDefaultSort: false, order: "desc" }
-            ]
-        };
-
-        const dropDown = renderDropdown(props);
-        const option = dropDown.find("option").at(0);
+        const wrapper = renderDropdown(props);
+        const option = wrapper.find("option").at(1);
 
         expect(option.prop("selected")).toBe(true);
     });
@@ -85,13 +74,12 @@ describe("Dropdown", () => {
 
             select.simulate("change", {
                 currentTarget: {
-                    selectedOptions: [ { getAttribute: (_attribute: string) => "asc" } ],
-                    value: newValue
+                    value: newValue + "-2"
                 }
             });
 
             setTimeout(() => {
-                expect(props.onDropdownChangeAction).toHaveBeenCalledWith(newValue, "asc");
+                expect(props.onDropdownChangeAction).toHaveBeenCalledWith(newValue, "desc");
                 done();
             }, 1000);
         });
@@ -108,8 +96,7 @@ describe("Dropdown", () => {
 
             select.simulate("change", {
                 currentTarget: {
-                    selectedOptions: [ { getAttribute: (_attribute: string) => "asc" } ],
-                    value: "Name"
+                    value: "Name-0"
                 }
             });
 
@@ -118,13 +105,12 @@ describe("Dropdown", () => {
 
                 select.simulate("change", {
                     currentTarget: {
-                        selectedOptions: [ { getAttribute: (_attribute: string) => "asc" } ],
-                        value: newValue
+                        value: newValue + "-2"
                     }
                 });
 
                 setTimeout(() => {
-                    expect(props.onDropdownChangeAction).toHaveBeenCalledWith(newValue, "asc");
+                    expect(props.onDropdownChangeAction).toHaveBeenCalledWith(newValue, "desc");
                     done();
                 }, 1000);
             }, 1000);

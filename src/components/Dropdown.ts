@@ -1,78 +1,74 @@
 import { Component, FormEvent, OptionHTMLAttributes, ReactElement, createElement } from "react";
-import { CommonProps } from "../utils/ContainerUtils";
 
-export interface DropdownProps extends CommonProps {
+import { AttributeType } from "../utils/ContainerUtils";
+
+export interface DropdownOptionType extends AttributeType {
+    value: string;
+}
+
+export interface DropdownProps {
     onDropdownChangeAction?: (attribute: string, order: string) => void;
+    options: DropdownOptionType[];
     style: object;
 }
 
 export interface DropdownState {
-    attribute: string;
-    id: string;
-    order: string;
-}
-
-export interface DropdownType extends OptionHTMLAttributes<HTMLOptionElement> {
-    order: string;
+    value: string;
 }
 
 export class Dropdown extends Component<DropdownProps, DropdownState> {
-    private defaultAttribute: string;
-    private defaultOrder: string;
-
     constructor(props: DropdownProps) {
         super(props);
 
-        this.state = { attribute: "", id: "", order: "asc" };
-        this.updateSort = this.updateSort.bind(this);
+        this.state = { value: "" };
+        this.handleChange = this.handleChange.bind(this);
+        this.renderOptions = this.renderOptions.bind(this);
     }
 
     render() {
         return createElement("div", { className: "form-group" },
             createElement("select", {
-                    className: "form-control",
-                    onChange: this.updateSort
-                },
-                this.createOptions())
+                className: "form-control",
+                onChange: this.handleChange
+            },
+                this.renderOptions())
         );
     }
 
-    componentDidMount() {
-        this.props.onDropdownChangeAction(this.defaultAttribute, this.defaultOrder);
-        this.setState({ attribute: this.defaultAttribute, order: this.defaultAttribute });
-    }
-
-    private createOptions(): Array<ReactElement<{}>> {
+    private renderOptions(): Array<ReactElement<{}>> {
         let foundDefaultSortOption;
-        const dropDownOptions = this.props.sortAttributes.map((optionObject) => {
-            const { name, caption, isDefaultSort, order } = optionObject;
-            const optionValue: DropdownType = {
+        let defaultValue;
+        const dropDownOptions = this.props.options.map((optionObject) => {
+            const { caption, value, isDefaultSort } = optionObject;
+            const optionValue: OptionHTMLAttributes<HTMLOptionElement> = {
                 className: "",
                 label: caption,
-                order,
                 selected: isDefaultSort && !foundDefaultSortOption,
-                value: name
+                value
             };
             if (isDefaultSort) {
                 foundDefaultSortOption = true;
-                this.defaultAttribute = name;
-                this.defaultOrder = order;
+                defaultValue = value;
             }
             return createElement("option", optionValue);
         });
-        if (!foundDefaultSortOption && this.props.sortAttributes.length > 0) {
-            this.defaultAttribute = this.props.sortAttributes[0].name;
-            this.defaultOrder = this.props.sortAttributes[0].order;
+
+        if (!foundDefaultSortOption && this.props.options.length > 0) {
+            defaultValue = this.props.options[0].value;
         }
+        this.callOnChangeAction(defaultValue);
 
         return dropDownOptions;
     }
 
-    private updateSort(event: FormEvent<HTMLSelectElement>) {
-        const order = event.currentTarget.selectedOptions[0].getAttribute("order");
-        const attribute = event.currentTarget.value;
+    private handleChange(event: FormEvent<HTMLSelectElement>) {
+        const value = event.currentTarget.value;
+        this.callOnChangeAction(value);
+    }
 
-        this.props.onDropdownChangeAction(attribute, order);
-        this.setState({ attribute, order });
+    private callOnChangeAction(value: string) {
+        const options = this.props.options.filter((optionFilter => optionFilter.value === value));
+        const option = options.pop();
+        this.props.onDropdownChangeAction(option.name, option.order);
     }
 }

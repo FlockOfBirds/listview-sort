@@ -6,13 +6,13 @@ insert_final_newline = true
 indent_style = space
 indent_size = 4
 
-[ {.babelrc, .stylelintrc, .eslintrc, *.json} ]
+[*.json]
 indent_style = space
 indent_size = 2
 
 [*.sass]
-indent_style = space
-indent_size = 4
+indent_style=space
+indent_size=4
 
 [*.md]
 trim_trailing_whitespace = false
