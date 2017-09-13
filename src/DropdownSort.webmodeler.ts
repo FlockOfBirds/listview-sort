@@ -36,16 +36,16 @@ export class preview extends Component<WrapperProps, DropdownSortState> {
     }
 
     componentDidMount() {
-        this.validateConfigs(this.props);
+        this.validateConfigs();
     }
 
-    componentWillReceiveProps(newProps: WrapperProps) {
-        this.validateConfigs(newProps);
+    componentWillReceiveProps(_newProps: WrapperProps) {
+        this.validateConfigs();
     }
 
-    private validateConfigs(props: WrapperProps) {
+    private validateConfigs() {
         const routeNode = findDOMNode(this) as HTMLElement;
-        const targetNode = ValidateConfigs.findTargetNode(props.targetListviewName, routeNode);
+        const targetNode = ValidateConfigs.findTargetNode(routeNode);
 
         if (targetNode) {
             this.setState({ targetNode });

@@ -1,12 +1,12 @@
 import { DropdownOptionType } from "../components/Dropdown";
 
-export interface AttributeType { name: string; caption: string; isDefaultSort: boolean; order: string; }
+export interface AttributeType { name: string; caption: string; defaultSelected: boolean; sort: string; }
 
 export interface WrapperProps {
     sortAttributes: AttributeType[];
     "class"?: string;
     mxform: mxui.lib.form._FormBase;
-    targetListviewName: string;
+    friendlyId: string;
     style: string;
 }
 
@@ -27,9 +27,9 @@ export interface ListView extends mxui.widget._WidgetBase {
 }
 
 export const createOptionProps = (sortAttributes: AttributeType[]): DropdownOptionType[] => sortAttributes.map((optionObject, index) => {
-    const { name, caption, isDefaultSort, order } = optionObject;
+    const { name, caption, defaultSelected, sort } = optionObject;
     const value = `${name}-${index}`;
-    return { name, caption, isDefaultSort, order, value };
+    return { name, caption, defaultSelected, sort, value };
 });
 
 export const parseStyle = (style = ""): { [key: string]: string } => {

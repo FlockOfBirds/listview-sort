@@ -39,14 +39,14 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
         let foundDefaultSortOption;
         let defaultValue;
         const dropDownOptions = this.props.options.map((optionObject) => {
-            const { caption, value, isDefaultSort } = optionObject;
+            const { caption, value, defaultSelected } = optionObject;
             const optionValue: OptionHTMLAttributes<HTMLOptionElement> = {
                 className: "",
                 label: caption,
-                selected: isDefaultSort && !foundDefaultSortOption,
+                selected: defaultSelected && !foundDefaultSortOption,
                 value
             };
-            if (isDefaultSort) {
+            if (defaultSelected) {
                 foundDefaultSortOption = true;
                 defaultValue = value;
             }
@@ -69,6 +69,6 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
     private callOnChangeAction(value: string) {
         const options = this.props.options.filter((optionFilter => optionFilter.value === value));
         const option = options.pop();
-        this.props.onDropdownChangeAction(option.name, option.order);
+        this.props.onDropdownChangeAction(option.name, option.sort);
     }
 }

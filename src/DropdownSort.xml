@@ -9,25 +9,20 @@
             <category>Data source</category>
             <description>Entity whose attributes will be sorted. This entity should match the list view entity</description>
         </property>
-        <property key="targetListviewName" type="string" required="false">
-            <caption>List view name</caption>
-            <category>Data source</category>
-            <description>The name of the list view on this page. It is optional</description>
-        </property>
         <property key="sortAttributes" type="object" isList="true" required="false">
             <caption>Sort attributes</caption>
             <category>Data source</category>
             <description></description>
             <properties>
-                <property key="caption" type="string" required="false">
+                <property key="caption" type="translatableString">
                     <caption>Caption</caption>
                     <category>Attribute</category>
                     <description></description>
                 </property>
                 <property key="name" type="attribute" required="false" entityProperty="../entity">
-                    <caption>Attribute name</caption>
+                    <caption>Attribute</caption>
                     <category>Attribute</category>
-                    <description>Attribute on the list view datasource entity or list view sort entity</description>
+                    <description>Attribute to sort the list view</description>
                     <attributeTypes>
                         <attributeType name="String"/>
                         <attributeType name="Integer"/>
@@ -38,8 +33,8 @@
                         <attributeType name="Long"/>
                     </attributeTypes>
                 </property>
-                <property key="order" type="enumeration" defaultValue="asc">
-                    <caption>Sort order</caption>
+                <property key="sort" type="enumeration" defaultValue="asc">
+                    <caption>Sort</caption>
                     <category>Attribute</category>
                     <description></description>
                     <enumerationValues>
@@ -47,8 +42,8 @@
                         <enumerationValue key="desc">Descending</enumerationValue>
                     </enumerationValues>
                 </property>
-                <property key="isDefaultSort" type="boolean" defaultValue="false">
-                    <caption>Default sort</caption>
+                <property key="defaultSelected" type="boolean" defaultValue="false">
+                    <caption>Default selected</caption>
                     <category>Attribute</category>
                     <description>if non is selected or other attributes are set to true, the widget will select the first</description>
                 </property>

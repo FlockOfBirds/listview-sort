@@ -34,7 +34,6 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
                 ...this.props as WrapperProps,
                 queryNode: this.state.targetNode,
                 targetListview: this.state.targetListview,
-                targetListviewName: this.props.targetListviewName,
                 validate: !this.state.findingListviewWidget
             }),
             this.renderDropdown()
@@ -60,7 +59,7 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
     private validate() {
         if (!this.state.validationPassed) {
             const queryNode = findDOMNode(this).parentNode as HTMLElement;
-            const targetNode = ValidateConfigs.findTargetNode(this.props.targetListviewName, queryNode);
+            const targetNode = ValidateConfigs.findTargetNode(queryNode);
             let targetGrid: ListView | null = null;
 
             if (targetNode) {
@@ -74,7 +73,6 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
                 ...this.props as WrapperProps,
                 queryNode: targetNode,
                 targetListview: targetGrid,
-                targetListviewName: this.props.targetListviewName,
                 validate: true
             });
             this.setState({ findingListviewWidget: false, validationPassed: !validateMessage });

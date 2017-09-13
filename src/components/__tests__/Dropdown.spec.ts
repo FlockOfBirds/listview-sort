@@ -11,20 +11,20 @@ describe("Dropdown", () => {
     const dropDownProps: DropdownProps = {
         onDropdownChangeAction: jasmine.any(Function) as any,
         options: createOptionProps([
-            { caption: "Name Asc", name: "Name", isDefaultSort: true, order: "asc" },
-            { caption: "Name Desc", name: "Name", isDefaultSort: false, order: "desc" },
-            { caption: "Code Desc", name: "Code", isDefaultSort: false, order: "desc" }
+            { caption: "Name Asc", name: "Name", defaultSelected: true, sort: "asc" },
+            { caption: "Name Desc", name: "Name", defaultSelected: false, sort: "desc" },
+            { caption: "Code Desc", name: "Code", defaultSelected: false, sort: "desc" }
         ]),
         style: parseStyle("html{}")
     };
 
     const createOptions = (props: DropdownProps) => {
         return props.options.map((optionObject) => {
-            const { caption, value, isDefaultSort } = optionObject;
+            const { caption, value, defaultSelected } = optionObject;
             const optionValue: OptionHTMLAttributes<HTMLOptionElement> = {
                 className: "",
                 label: caption,
-                selected: isDefaultSort,
+                selected: defaultSelected,
                 value
             };
             return createElement("option", optionValue);
@@ -50,8 +50,8 @@ describe("Dropdown", () => {
         const props: DropdownProps = {
             ...dropDownProps,
             options: createOptionProps([
-                { caption: "Name Asc", name: "Name", isDefaultSort: false, order: "asc" },
-                { caption: "Name Desc", name: "Name", isDefaultSort: true, order: "desc" }
+                { caption: "Name Asc", name: "Name", defaultSelected: false, sort: "asc" },
+                { caption: "Name Desc", name: "Name", defaultSelected: true, sort: "desc" }
             ])
         };
 
