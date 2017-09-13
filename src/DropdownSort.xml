@@ -9,7 +9,7 @@
             <category>Data source</category>
             <description>Entity whose attributes will be sorted. This entity should match the list view entity</description>
         </property>
-        <property key="targetGridName" type="string" required="false">
+        <property key="targetListviewName" type="string" required="false">
             <caption>List view name</caption>
             <category>Data source</category>
             <description>The name of the list view on this page. It is optional</description>
