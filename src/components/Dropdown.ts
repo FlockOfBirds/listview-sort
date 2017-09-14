@@ -50,7 +50,7 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
                 foundDefaultSortOption = true;
                 defaultValue = value;
             }
-            return createElement("option", optionValue);
+            return createElement("option", optionValue, caption);
         });
 
         if (!foundDefaultSortOption && this.props.options.length > 0) {
