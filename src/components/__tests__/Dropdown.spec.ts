@@ -9,7 +9,7 @@ describe("Dropdown", () => {
     const renderDropdown = (props: DropdownProps) => shallow(createElement(Dropdown, props));
 
     const dropDownProps: DropdownProps = {
-        onDropdownChangeAction: jasmine.any(Function) as any,
+        onDropdownChangeAction: value => value,
         options: createOptionProps([
             { caption: "Name Asc", name: "Name", defaultSelected: true, sort: "asc" },
             { caption: "Name Desc", name: "Name", defaultSelected: false, sort: "desc" },
@@ -27,7 +27,7 @@ describe("Dropdown", () => {
                 selected: defaultSelected,
                 value
             };
-            return createElement("option", optionValue);
+            return createElement("option", optionValue, caption);
         });
     };
 

@@ -23,6 +23,7 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
         this.state = { value: "" };
         this.handleChange = this.handleChange.bind(this);
         this.renderOptions = this.renderOptions.bind(this);
+        this.callOnChangeAction = this.callOnChangeAction.bind(this);
     }
 
     render() {
