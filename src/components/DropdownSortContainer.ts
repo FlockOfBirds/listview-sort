@@ -44,7 +44,7 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
         dojoConnect.disconnect(this.navigationHandler);
     }
 
-    private renderDropdown(): ReactElement<DropdownProps> {
+    private renderDropdown(): ReactElement<DropdownProps> | null {
         if (this.state.validationPassed) {
             return createElement(Dropdown, {
                 onDropdownChangeAction: this.updateSort,
@@ -60,20 +60,20 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
         if (!this.state.validationPassed) {
             const queryNode = findDOMNode(this).parentNode as HTMLElement;
             const targetNode = ValidateConfigs.findTargetNode(queryNode);
-            let targetGrid: ListView | null = null;
+            let targetListView: ListView | null = null;
 
             if (targetNode) {
                 this.setState({ targetNode });
-                targetGrid = dijitRegistry.byNode(targetNode);
-                if (targetGrid) {
-                    this.setState({ targetListview: targetGrid });
+                targetListView = dijitRegistry.byNode(targetNode);
+                if (targetListView) {
+                    this.setState({ targetListview: targetListView });
                 }
             }
             const validateMessage = ValidateConfigs.validate({
                 ...this.props as WrapperProps,
-                queryNode: targetNode,
-                targetListview: targetGrid,
-                validate: true
+                queryNode: this.state.targetNode,
+                targetListview: this.state.targetListview,
+                validate: !this.state.findingListviewWidget
             });
             this.setState({ findingListviewWidget: false, validationPassed: !validateMessage });
         }

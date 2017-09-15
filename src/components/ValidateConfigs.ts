@@ -10,7 +10,7 @@ export interface ValidateConfigProps extends WrapperProps {
     validate: boolean;
 }
 
-const showAlert = (friendlyId: string, message) => `Custom widget ${friendlyId} Error in configuration" ${message}`;
+const showAlert = (friendlyId: string, message: string) => `Custom widget ${friendlyId} Error in configuration" ${message}`;
 
 export class ValidateConfigs extends Component<ValidateConfigProps, {}> {
     render() {
@@ -28,7 +28,7 @@ export class ValidateConfigs extends Component<ValidateConfigProps, {}> {
         if (props.inWebModeler) {
             return "";
         }
-        if (!ValidateConfigs.isCompatible(props.targetListview)) {
+        if (props.targetListview && !ValidateConfigs.isCompatible(props.targetListview)) {
             return showAlert(props.friendlyId, "this Mendix version is incompatible");
         }
 
