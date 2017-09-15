@@ -16,6 +16,8 @@ export interface DropdownState {
     value: string;
 }
 
+export interface DropdownType extends OptionHTMLAttributes<HTMLOptionElement> { key: string; }
+
 export class Dropdown extends Component<DropdownProps, DropdownState> {
     constructor(props: DropdownProps) {
         super(props);
@@ -37,12 +39,13 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
     }
 
     private renderOptions(): Array<ReactElement<{}>> {
-        let foundDefaultSortOption;
-        let defaultValue;
+        let foundDefaultSortOption = false;
+        let defaultValue = "";
         const dropDownOptions = this.props.options.map((optionObject) => {
             const { caption, value, defaultSelected } = optionObject;
-            const optionValue: OptionHTMLAttributes<HTMLOptionElement> = {
+            const optionValue: DropdownType = {
                 className: "",
+                key: value,
                 label: caption,
                 selected: defaultSelected && !foundDefaultSortOption,
                 value
@@ -70,6 +73,8 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
     private callOnChangeAction(value: string) {
         const options = this.props.options.filter((optionFilter => optionFilter.value === value));
         const option = options.pop();
-        this.props.onDropdownChangeAction(option.name, option.sort);
+        if (option && this.props.onDropdownChangeAction) {
+            this.props.onDropdownChangeAction(option.name, option.sort);
+        }
     }
 }
