@@ -29,13 +29,10 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
     }
 
     render() {
-        return createElement("div", { className: "form-group" },
-            createElement("select", {
-                className: "form-control",
-                onChange: this.handleChange
-            },
-                this.renderOptions())
-        );
+        return createElement("select", {
+            className: "form-control",
+            onChange: this.handleChange
+        }, this.renderOptions());
     }
 
     private renderOptions(): Array<ReactElement<{}>> {
