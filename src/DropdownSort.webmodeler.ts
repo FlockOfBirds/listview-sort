@@ -15,7 +15,7 @@ export class preview extends Component<WrapperProps, DropdownSortState> {
     constructor(props: WrapperProps) {
         super(props);
 
-        this.state = { findingListviewWidget: true };
+        this.state = { findingListviewWidget: true, isLoading: false };
     }
 
     render() {
@@ -24,7 +24,7 @@ export class preview extends Component<WrapperProps, DropdownSortState> {
                 ...this.props as WrapperProps,
                 inWebModeler: true,
                 queryNode: this.state.targetNode,
-                targetListview: this.state.targetListview,
+                targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
             }),
             createElement(Dropdown, {
@@ -55,5 +55,5 @@ export class preview extends Component<WrapperProps, DropdownSortState> {
 }
 
 export function getPreviewCss() {
-    return require("./ui/DropdownSort.css");
+    return require("./ui/DropdownSort.scss");
 }

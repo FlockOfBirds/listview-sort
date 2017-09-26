@@ -1,8 +1,8 @@
 import { shallow } from "enzyme";
 import { createElement } from "react";
 
-import { Dropdown, DropdownProps, DropdownType } from "../Dropdown";
-import { createOptionProps, parseStyle } from "../../utils/ContainerUtils";
+import { Dropdown, DropdownProps } from "../Dropdown";
+import { OptionHTMLAttributesType, createOptionProps, parseStyle } from "../../utils/ContainerUtils";
 
 describe("Dropdown", () => {
 
@@ -21,7 +21,7 @@ describe("Dropdown", () => {
     const createOptions = (props: DropdownProps) => {
         return props.options.map((optionObject) => {
             const { caption, value, defaultSelected } = optionObject;
-            const optionValue: DropdownType = {
+            const optionValue: OptionHTMLAttributesType = {
                 className: "",
                 key: value,
                 label: caption,

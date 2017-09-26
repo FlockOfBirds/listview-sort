@@ -2,13 +2,14 @@ import { Component, ReactElement, createElement } from "react";
 import { findDOMNode } from "react-dom";
 import * as dijitRegistry from "dijit/registry";
 import * as classNames from "classnames";
-import * as dojoLang from "dojo/_base/lang";
 import * as dojoConnect from "dojo/_base/connect";
 
 import { Dropdown, DropdownProps } from "./Dropdown";
 import { ValidateConfigs } from "./ValidateConfigs";
 import { DropdownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
-import "../ui/DropdownSort.css";
+import { PreLoader } from "./PreLoader";
+
+import "../ui/DropdownSort.scss";
 
 export default class DropdownSort extends Component<WrapperProps, DropdownSortState> {
     private navigationHandler: object;
@@ -18,25 +19,28 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
 
         this.state = {
             alertMessage: "",
-            findingListviewWidget: true
+            findingListviewWidget: true,
+            isLoading: true
         };
         this.updateSort = this.updateSort.bind(this);
-        this.navigationHandler = dojoConnect.connect(props.mxform, "onNavigation", this, dojoLang.hitch(this, this.validate));
+        this.validateListView = this.validateListView.bind(this);
+        this.navigationHandler = dojoConnect.connect(props.mxform, "onNavigation", this, this.validateListView);
     }
 
     render() {
         return createElement("div",
             {
-                className: classNames("widget-dropdown-sort", this.props.class),
+                className: classNames("widget-drop-down-sort", this.props.class),
                 style: parseStyle(this.props.style)
             },
             createElement(ValidateConfigs, {
                 ...this.props as WrapperProps,
                 queryNode: this.state.targetNode,
-                targetListview: this.state.targetListview,
+                targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
             }),
-            this.renderDropdown()
+            this.renderDropdown(),
+            this.state.isLoading ? createElement(PreLoader) : null
         );
     }
 
@@ -56,7 +60,7 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
         return null;
     }
 
-    private validate() {
+    private validateListView() {
         if (!this.state.validationPassed) {
             const queryNode = findDOMNode(this).parentNode as HTMLElement;
             const targetNode = ValidateConfigs.findTargetNode(queryNode);
@@ -64,15 +68,16 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
 
             if (targetNode) {
                 this.setState({ targetNode });
+                this.showPreLoader();
                 targetListView = dijitRegistry.byNode(targetNode);
                 if (targetListView) {
-                    this.setState({ targetListview: targetListView });
+                    this.setState({ targetListView });
                 }
             }
             const validateMessage = ValidateConfigs.validate({
                 ...this.props as WrapperProps,
                 queryNode: this.state.targetNode,
-                targetListview: this.state.targetListview,
+                targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
             });
             this.setState({ findingListviewWidget: false, validationPassed: !validateMessage });
@@ -80,9 +85,30 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
     }
 
     private updateSort(attribute: string, order: string) {
-        if (this.state.targetListview && this.state.targetListview._datasource && this.state.validationPassed) {
-            this.state.targetListview._datasource._sorting = [ [ attribute, order ] ];
-            this.state.targetListview.update();
+        const { targetNode, targetListView, validationPassed } = this.state;
+
+        if (targetListView && targetNode && validationPassed) {
+            this.showPreLoader();
+            targetListView._datasource._sorting = [ [ attribute, order ] ];
+            targetListView.update(null, () => {
+                this.hidePreLoader();
+            });
         }
+    }
+
+    private showPreLoader() {
+        if (this.state.targetNode) {
+            this.state.targetNode.style.display = "none";
+        }
+
+        this.setState({ isLoading: true });
+    }
+
+    private hidePreLoader() {
+        if (this.state.targetNode) {
+            this.state.targetNode.style.display = "inline";
+        }
+
+        this.setState({ isLoading: false });
     }
 }

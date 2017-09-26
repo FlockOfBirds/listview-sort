@@ -1,6 +1,6 @@
-import { Component, FormEvent, OptionHTMLAttributes, ReactElement, createElement } from "react";
+import { Component, FormEvent, ReactElement, createElement } from "react";
 
-import { AttributeType } from "../utils/ContainerUtils";
+import { AttributeType, OptionHTMLAttributesType } from "../utils/ContainerUtils";
 
 export interface DropdownOptionType extends AttributeType {
     value: string;
@@ -16,60 +16,69 @@ export interface DropdownState {
     value: string;
 }
 
-export interface DropdownType extends OptionHTMLAttributes<HTMLOptionElement> { key: string; }
-
 export class Dropdown extends Component<DropdownProps, DropdownState> {
     constructor(props: DropdownProps) {
         super(props);
 
-        this.state = { value: "" };
+        this.state = { value: this.getDefaultValue() };
         this.handleChange = this.handleChange.bind(this);
         this.renderOptions = this.renderOptions.bind(this);
         this.callOnChangeAction = this.callOnChangeAction.bind(this);
+        this.getDefaultValue = this.getDefaultValue.bind(this);
+
+        this.callOnChangeAction(this.state.value);
+
     }
 
     render() {
         return createElement("select", {
-            className: "form-control",
-            onChange: this.handleChange
-        }, this.renderOptions());
+                className: "form-control",
+                onChange: this.handleChange,
+                value: this.state.value
+            },
+            this.renderOptions()
+        );
+    }
+
+    private getDefaultValue(): string {
+        this.props.options.forEach((optionObject) => {
+            const { value, defaultSelected } = optionObject;
+
+            if (defaultSelected) {
+                return value;
+            }
+        });
+
+        return this.props.options[0].value;
     }
 
     private renderOptions(): Array<ReactElement<{}>> {
-        let foundDefaultSortOption = false;
-        let defaultValue = "";
-        const dropDownOptions = this.props.options.map((optionObject) => {
-            const { caption, value, defaultSelected } = optionObject;
-            const optionValue: DropdownType = {
+        return this.props.options.map((optionObject) => {
+            const { caption, value } = optionObject;
+
+            const optionValue: OptionHTMLAttributesType = {
                 className: "",
                 key: value,
                 label: caption,
-                selected: defaultSelected && !foundDefaultSortOption,
                 value
             };
-            if (defaultSelected) {
-                foundDefaultSortOption = true;
-                defaultValue = value;
-            }
+
             return createElement("option", optionValue, caption);
         });
-
-        if (!foundDefaultSortOption && this.props.options.length > 0) {
-            defaultValue = this.props.options[0].value;
-        }
-        this.callOnChangeAction(defaultValue);
-
-        return dropDownOptions;
     }
 
     private handleChange(event: FormEvent<HTMLSelectElement>) {
         const value = event.currentTarget.value;
+
+        this.setState({ value });
         this.callOnChangeAction(value);
+
     }
 
     private callOnChangeAction(value: string) {
         const options = this.props.options.filter((optionFilter => optionFilter.value === value));
         const option = options.pop();
+
         if (option && this.props.onDropdownChangeAction) {
             this.props.onDropdownChangeAction(option.name, option.sort);
         }

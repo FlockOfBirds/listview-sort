@@ -1,3 +1,5 @@
+import { OptionHTMLAttributes } from "react";
+
 import { DropdownOptionType } from "../components/Dropdown";
 
 export interface AttributeType { name: string; caption: string; defaultSelected: boolean; sort: string; }
@@ -12,7 +14,8 @@ export interface WrapperProps {
 
 export interface DropdownSortState {
     alertMessage?: string;
-    targetListview?: ListView;
+    isLoading: boolean;
+    targetListView?: ListView;
     targetNode?: HTMLElement;
     findingListviewWidget: boolean;
     validationPassed?: boolean;
@@ -23,8 +26,11 @@ export interface ListView extends mxui.widget._WidgetBase {
         _entity: string;
         _sorting: string[][];
     };
-    update: () => void;
+    update: (obj: mendix.lib.MxObject | null, callback?: () => void) => void;
+    sequence: (sequence: string[], callback?: () => void) => void;
 }
+
+export interface OptionHTMLAttributesType extends OptionHTMLAttributes<HTMLOptionElement> { key: string; }
 
 export const createOptionProps = (sortAttributes: AttributeType[]): DropdownOptionType[] => sortAttributes.map((optionObject, index) => {
     const { name, caption, defaultSelected, sort } = optionObject;

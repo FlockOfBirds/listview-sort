@@ -11,8 +11,7 @@ It supports sorting on a single field similar to the built-in list view sort cap
 
 ## Features
 * Sort through a single field
-* Specify an option to sort list view items on load. If multiple defaults are selected,
-the widget will select the first one.
+* Specify an option to sort list view items on load. If multiple defaults are selected, the widget will select the first one.
 * If no default select option is specified the widget will always select the first one.
 
 ## Dependencies
