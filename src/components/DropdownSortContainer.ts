@@ -40,7 +40,7 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
                 validate: !this.state.findingListviewWidget
             }),
             this.renderDropdown(),
-            this.state.isLoading ? createElement(PreLoader) : null
+            this.state.isLoading && this.state.validationPassed ? createElement(PreLoader) : null
         );
     }
 
@@ -74,12 +74,14 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
                     this.setState({ targetListView });
                 }
             }
+
             const validateMessage = ValidateConfigs.validate({
                 ...this.props as WrapperProps,
                 queryNode: this.state.targetNode,
                 targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
             });
+
             this.setState({ findingListviewWidget: false, validationPassed: !validateMessage });
         }
     }
