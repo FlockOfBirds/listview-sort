@@ -11,7 +11,7 @@ export interface ValidateConfigProps extends WrapperProps {
     validate: boolean;
 }
 
-const showAlert = (friendlyId: string, message: string) => `Custom widget ${friendlyId} Error in configuration" ${message}`;
+const showAlert = (friendlyId: string, message: string) => `Custom widget ${friendlyId} Error in configuration: ${message}`;
 
 export class ValidateConfigs extends Component<ValidateConfigProps, {}> {
     render() {
@@ -28,6 +28,10 @@ export class ValidateConfigs extends Component<ValidateConfigProps, {}> {
         }
         if (props.inWebModeler) {
             return "";
+        }
+        const type = props.targetListview && props.targetListview.datasource.type;
+        if (type !== "database" && type !== "xpath") {
+            return showAlert(props.friendlyId, "widget is only compatible with list view data source type 'Database' and 'XPath'");
         }
         if (props.targetListview && !ValidateConfigs.isCompatible(props.targetListview)) {
             return showAlert(props.friendlyId, "this Mendix version is incompatible");
