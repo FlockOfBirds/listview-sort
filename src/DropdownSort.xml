@@ -6,12 +6,12 @@
     <properties>
         <property key="entity" type="entity">
             <caption>List view entity</caption>
-            <category>Data source</category>
+            <category>General</category>
             <description>Entity whose attributes will be sorted. This entity should match the list view entity</description>
         </property>
         <property key="sortAttributes" type="object" isList="true" required="false">
             <caption>Sort attributes</caption>
-            <category>Data source</category>
+            <category>General</category>
             <description></description>
             <properties>
                 <property key="caption" type="translatableString">
