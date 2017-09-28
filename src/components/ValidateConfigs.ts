@@ -29,8 +29,8 @@ export class ValidateConfigs extends Component<ValidateConfigProps, {}> {
         if (props.inWebModeler) {
             return "";
         }
-        const type = props.targetListview && props.targetListview.datasource.type;
-        if (type !== "database" && type !== "xpath") {
+        const type = props.targetListview && props.targetListview.datasource && props.targetListview.datasource.type;
+        if (type && (type === "microflow" || type === "entityPath")) {
             return showAlert(props.friendlyId, "widget is only compatible with list view data source type 'Database' and 'XPath'");
         }
         if (props.targetListview && !ValidateConfigs.isCompatible(props.targetListview)) {
@@ -43,6 +43,9 @@ export class ValidateConfigs extends Component<ValidateConfigProps, {}> {
     static isCompatible(targetGrid: ListView): boolean {
         return !!(targetGrid &&
             targetGrid.update &&
+            targetGrid.datasource &&
+            targetGrid.datasource.type &&
+            (targetGrid.datasource.type === "database" || targetGrid.datasource.type === "xpath") &&
             targetGrid._datasource &&
             targetGrid._datasource._entity &&
             targetGrid._datasource._sorting);
