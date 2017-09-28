@@ -10,7 +10,7 @@
             <description>Entity whose attributes will be sorted. This entity should match the list view entity</description>
         </property>
         <property key="sortAttributes" type="object" isList="true" required="false">
-            <caption>Sort attributes</caption>
+            <caption>Sort options</caption>
             <category>General</category>
             <description></description>
             <properties>
