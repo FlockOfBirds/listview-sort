@@ -22,7 +22,11 @@ const widgetConfig = {
         rules: [
             { test: /\.ts$/, use: "ts-loader" },
             {
+<<<<<<< HEAD
                 test: /\.s?css$/,
+=======
+                test: /\.scss$/,
+>>>>>>> Move loading.gif into file
                 loader: ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: "css-loader!sass-loader"

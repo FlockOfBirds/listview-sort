@@ -6,13 +6,8 @@ import * as dojoConnect from "dojo/_base/connect";
 
 import { Dropdown, DropdownProps } from "./Dropdown";
 import { ValidateConfigs } from "./ValidateConfigs";
-<<<<<<< HEAD
 import { DropdownSortState, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
-import { PreLoader } from "./PreLoader";
 import { DataSourceHelper, ListView } from "../utils/DataSourceHelper/DataSourceHelper";
-=======
-import { DropdownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
->>>>>>> Loading with CSS only
 
 import "../ui/DropdownSort.scss";
 
@@ -153,13 +148,13 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
 
     private showLoader(node?: HTMLElement) {
         if (node) {
-            node.classList.add("widget-dropdown-sort-loading");
+            node.classList.add("widget-drop-down-sort-loading");
         }
     }
 
     private hideLoader(node?: HTMLElement) {
         if (node) {
-            node.classList.remove("widget-dropdown-sort-loading");
+            node.classList.remove("widget-drop-down-sort-loading");
         }
     }
 >>>>>>> Loading with CSS only
