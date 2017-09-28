@@ -102,13 +102,13 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
 
     private showLoader(node?: HTMLElement) {
         if (node) {
-            node.classList.add("widget-dropdown-sort-loading");
+            node.classList.add("widget-drop-down-sort-loading");
         }
     }
 
     private hideLoader(node?: HTMLElement) {
         if (node) {
-            node.classList.remove("widget-dropdown-sort-loading");
+            node.classList.remove("widget-drop-down-sort-loading");
         }
     }
 }

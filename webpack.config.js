@@ -22,18 +22,18 @@ const widgetConfig = {
         rules: [
             { test: /\.ts$/, use: "ts-loader" },
             {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader"
-                })
-            },
-            {
                 test: /\.scss$/,
                 loader: ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: "css-loader!sass-loader"
                 })
+            },
+            {
+                test: /\.gif$/,
+                use: [ {
+                    loader: "url-loader",
+                    options: { limit: 8192 }
+                } ]
             }
         ]
     },
