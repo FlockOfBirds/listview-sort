@@ -21,6 +21,9 @@ export interface DropdownSortState {
 }
 
 export interface ListView extends mxui.widget._WidgetBase {
+    datasource: {
+        type: "microflow" | "entityPath" | "database" | "xpath";
+    };
     _datasource: {
         _entity: string;
         _sorting: string[][];
