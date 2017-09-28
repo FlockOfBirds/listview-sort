@@ -19,7 +19,7 @@
                     <category>Attribute</category>
                     <description></description>
                 </property>
-                <property key="name" type="attribute" required="false" entityProperty="../entity">
+                <property key="name" type="attribute" required="false" isPath="optional" pathType="reference" entityProperty="../entity">
                     <caption>Attribute</caption>
                     <category>Attribute</category>
                     <description>Attribute to sort the list view</description>

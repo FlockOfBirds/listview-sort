@@ -14,7 +14,6 @@ export interface WrapperProps {
 
 export interface DropdownSortState {
     alertMessage?: string;
-    isLoading: boolean;
     targetListView?: ListView;
     targetNode?: HTMLElement;
     findingListviewWidget: boolean;

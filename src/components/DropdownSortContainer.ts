@@ -7,7 +7,6 @@ import * as dojoConnect from "dojo/_base/connect";
 import { Dropdown, DropdownProps } from "./Dropdown";
 import { ValidateConfigs } from "./ValidateConfigs";
 import { DropdownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
-import { PreLoader } from "./PreLoader";
 
 import "../ui/DropdownSort.scss";
 
@@ -19,8 +18,7 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
 
         this.state = {
             alertMessage: "",
-            findingListviewWidget: true,
-            isLoading: true
+            findingListviewWidget: true
         };
         this.updateSort = this.updateSort.bind(this);
         this.validateListView = this.validateListView.bind(this);
@@ -39,8 +37,7 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
                 targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
             }),
-            this.renderDropdown(),
-            this.state.isLoading && this.state.validationPassed ? createElement(PreLoader) : null
+            this.renderDropdown()
         );
     }
 
@@ -68,7 +65,6 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
 
             if (targetNode) {
                 this.setState({ targetNode });
-                this.showPreLoader();
                 targetListView = dijitRegistry.byNode(targetNode);
                 if (targetListView) {
                     this.setState({ targetListView });
@@ -90,27 +86,29 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
         const { targetNode, targetListView, validationPassed } = this.state;
 
         if (targetListView && targetNode && validationPassed) {
-            this.showPreLoader();
+            this.showLoader(targetNode);
             targetListView._datasource._sorting = [ [ attribute, order ] ];
             targetListView.update(null, () => {
-                this.hidePreLoader();
+                this.hideLoader(targetNode);
             });
         }
     }
 
-    private showPreLoader() {
-        if (this.state.targetNode) {
-            this.state.targetNode.style.display = "none";
-        }
-
-        this.setState({ isLoading: true });
+    componentDidMount() {
+        const queryNode = findDOMNode(this).parentNode as HTMLElement;
+        const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
+        this.showLoader(targetNode);
     }
 
-    private hidePreLoader() {
-        if (this.state.targetNode) {
-            this.state.targetNode.style.display = "inline";
+    private showLoader(node?: HTMLElement) {
+        if (node) {
+            node.classList.add("widget-dropdown-sort-loading");
         }
+    }
 
-        this.setState({ isLoading: false });
+    private hideLoader(node?: HTMLElement) {
+        if (node) {
+            node.classList.remove("widget-dropdown-sort-loading");
+        }
     }
 }

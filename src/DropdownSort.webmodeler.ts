@@ -15,7 +15,7 @@ export class preview extends Component<WrapperProps, DropdownSortState> {
     constructor(props: WrapperProps) {
         super(props);
 
-        this.state = { findingListviewWidget: true, isLoading: false };
+        this.state = { findingListviewWidget: true };
     }
 
     render() {
