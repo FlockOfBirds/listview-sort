@@ -6,9 +6,13 @@ import * as dojoConnect from "dojo/_base/connect";
 
 import { Dropdown, DropdownProps } from "./Dropdown";
 import { ValidateConfigs } from "./ValidateConfigs";
+<<<<<<< HEAD
 import { DropdownSortState, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
 import { PreLoader } from "./PreLoader";
 import { DataSourceHelper, ListView } from "../utils/DataSourceHelper/DataSourceHelper";
+=======
+import { DropdownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
+>>>>>>> Loading with CSS only
 
 import "../ui/DropdownSort.scss";
 
@@ -21,8 +25,7 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
 
         this.state = {
             alertMessage: "",
-            findingListviewWidget: true,
-            isLoading: true
+            findingListviewWidget: true
         };
         this.updateSort = this.updateSort.bind(this);
         this.validateListView = this.validateListView.bind(this);
@@ -41,8 +44,7 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
                 targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
             }),
-            this.renderDropdown(),
-            this.state.isLoading && this.state.validationPassed ? createElement(PreLoader) : null
+            this.renderDropdown()
         );
     }
 
@@ -69,6 +71,10 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
             let targetListView: ListView | null = null;
 
             if (targetNode) {
+<<<<<<< HEAD
+=======
+                this.setState({ targetNode });
+>>>>>>> Loading with CSS only
                 targetListView = dijitRegistry.byNode(targetNode);
                 if (targetListView) {
                     if (!targetListView.__customWidgetDataSourceHelper) {
@@ -108,6 +114,7 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
     private updateSort(attribute: string, order: string) {
         const { targetNode, targetListView, validationPassed } = this.state;
 
+<<<<<<< HEAD
         if (targetListView && targetNode && validationPassed && this.dataSourceHelper) {
             this.dataSourceHelper.setConstraint("sorting", this.props.friendlyId, [ attribute, order ]);
         }
@@ -128,4 +135,32 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
 
     //     this.setState({ isLoading: false });
     // }
+=======
+        if (targetListView && targetNode && validationPassed) {
+            this.showLoader(targetNode);
+            targetListView._datasource._sorting = [ [ attribute, order ] ];
+            targetListView.update(null, () => {
+                this.hideLoader(targetNode);
+            });
+        }
+    }
+
+    componentDidMount() {
+        const queryNode = findDOMNode(this).parentNode as HTMLElement;
+        const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
+        this.showLoader(targetNode);
+    }
+
+    private showLoader(node?: HTMLElement) {
+        if (node) {
+            node.classList.add("widget-dropdown-sort-loading");
+        }
+    }
+
+    private hideLoader(node?: HTMLElement) {
+        if (node) {
+            node.classList.remove("widget-dropdown-sort-loading");
+        }
+    }
+>>>>>>> Loading with CSS only
 }
