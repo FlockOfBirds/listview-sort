@@ -4,14 +4,14 @@ import * as dijitRegistry from "dijit/registry";
 import * as classNames from "classnames";
 import * as dojoConnect from "dojo/_base/connect";
 
-import { Dropdown, DropdownProps } from "./Dropdown";
+import { DropDown, DropDownProps } from "./DropDownSort";
 import { ValidateConfigs } from "./ValidateConfigs";
-import { DropdownSortState, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
+import { DropDownSortState, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
 import { DataSourceHelper, ListView } from "../utils/DataSourceHelper/DataSourceHelper";
 
-import "../ui/DropdownSort.scss";
+import "../ui/DropDownSort.scss";
 
-export default class DropdownSort extends Component<WrapperProps, DropdownSortState> {
+export default class DropDownSortContainer extends Component<WrapperProps, DropDownSortState> {
     private navigationHandler: object;
     private dataSourceHelper: DataSourceHelper;
 
@@ -39,18 +39,24 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
                 targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
             }),
-            this.renderDropdown()
+            this.renderDropDown()
         );
+    }
+
+    componentDidMount() {
+        const queryNode = findDOMNode(this).parentNode as HTMLElement;
+        const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
+        this.showLoader(targetNode);
     }
 
     componentWillUnmount() {
         dojoConnect.disconnect(this.navigationHandler);
     }
 
-    private renderDropdown(): ReactElement<DropdownProps> | null {
+    private renderDropDown(): ReactElement<DropDownProps> | null {
         if (this.state.validationPassed) {
-            return createElement(Dropdown, {
-                onDropdownChangeAction: this.updateSort,
+            return createElement(DropDown, {
+                onDropDownChangeAction: this.updateSort,
                 options: createOptionProps(this.props.sortAttributes),
                 style: parseStyle(this.props.style)
             });
@@ -66,10 +72,6 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
             let targetListView: ListView | null = null;
 
             if (targetNode) {
-<<<<<<< HEAD
-=======
-                this.setState({ targetNode });
->>>>>>> Loading with CSS only
                 targetListView = dijitRegistry.byNode(targetNode);
                 if (targetListView) {
                     if (!targetListView.__customWidgetDataSourceHelper) {
@@ -109,7 +111,6 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
     private updateSort(attribute: string, order: string) {
         const { targetNode, targetListView, validationPassed } = this.state;
 
-<<<<<<< HEAD
         if (targetListView && targetNode && validationPassed && this.dataSourceHelper) {
             this.dataSourceHelper.setConstraint("sorting", this.props.friendlyId, [ attribute, order ]);
         }
@@ -130,32 +131,4 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
 
     //     this.setState({ isLoading: false });
     // }
-=======
-        if (targetListView && targetNode && validationPassed) {
-            this.showLoader(targetNode);
-            targetListView._datasource._sorting = [ [ attribute, order ] ];
-            targetListView.update(null, () => {
-                this.hideLoader(targetNode);
-            });
-        }
-    }
-
-    componentDidMount() {
-        const queryNode = findDOMNode(this).parentNode as HTMLElement;
-        const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
-        this.showLoader(targetNode);
-    }
-
-    private showLoader(node?: HTMLElement) {
-        if (node) {
-            node.classList.add("widget-drop-down-sort-loading");
-        }
-    }
-
-    private hideLoader(node?: HTMLElement) {
-        if (node) {
-            node.classList.remove("widget-drop-down-sort-loading");
-        }
-    }
->>>>>>> Loading with CSS only
 }
