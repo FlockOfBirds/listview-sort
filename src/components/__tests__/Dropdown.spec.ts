@@ -20,12 +20,11 @@ describe("Dropdown", () => {
 
     const createOptions = (props: DropdownProps) => {
         return props.options.map((optionObject) => {
-            const { caption, value, defaultSelected } = optionObject;
+            const { caption, value } = optionObject;
             const optionValue: OptionHTMLAttributesType = {
                 className: "",
                 key: value,
                 label: caption,
-                selected: defaultSelected,
                 value
             };
             return createElement("option", optionValue, caption);
@@ -36,13 +35,12 @@ describe("Dropdown", () => {
         const wrapper = renderDropdown(dropDownProps);
 
         expect(wrapper).toBeElement(
-            createElement("div", { className: "form-group" },
-                createElement("select", {
-                    className: "form-control",
-                    onChange: jasmine.any(Function) as any
-                },
-                    createOptions(dropDownProps)
-                )
+            createElement("select", {
+                className: "form-control",
+                onChange: jasmine.any(Function) as any,
+                value: jasmine.any(String) as any
+            },
+                createOptions(dropDownProps)
             )
         );
     });
@@ -57,9 +55,9 @@ describe("Dropdown", () => {
         };
 
         const wrapper = renderDropdown(props);
-        const option = wrapper.find("option").at(1);
+        const option = wrapper.find("select");
 
-        expect(option.prop("selected")).toBe(true);
+        expect(option.prop("value")).toBe("Name-0");
     });
 
     describe("select", () => {
