@@ -1,17 +1,17 @@
 import { Component, createElement } from "react";
 import { findDOMNode } from "react-dom";
 
-import { Dropdown } from "./components/Dropdown";
+import { DropDown } from "./components/DropDownSort";
 import { ValidateConfigs } from "./components/ValidateConfigs";
 import {
-    DropdownSortState, WrapperProps, createOptionProps,
+    DropDownSortState, WrapperProps, createOptionProps,
     parseStyle
 } from "./utils/ContainerUtils";
 
 declare function require(name: string): string;
 
 // tslint:disable-next-line class-name
-export class preview extends Component<WrapperProps, DropdownSortState> {
+export class preview extends Component<WrapperProps, DropDownSortState> {
     constructor(props: WrapperProps) {
         super(props);
 
@@ -27,8 +27,8 @@ export class preview extends Component<WrapperProps, DropdownSortState> {
                 targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
             }),
-            createElement(Dropdown, {
-                onDropdownChangeAction: () => { return; },
+            createElement(DropDown, {
+                onDropDownChangeAction: () => { return; },
                 options: createOptionProps(this.props.sortAttributes),
                 style: parseStyle(this.props.style)
             })
@@ -55,5 +55,5 @@ export class preview extends Component<WrapperProps, DropdownSortState> {
 }
 
 export function getPreviewCss() {
-    return require("./ui/DropdownSort.scss");
+    return require("./ui/DropDownSort.scss");
 }

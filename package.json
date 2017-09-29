@@ -1,6 +1,6 @@
 {
-  "name": "dropdown-sort",
-  "widgetName": "DropdownSort",
+  "name": "drop-down-sort",
+  "widgetName": "DropDownSort",
   "version": "1.0.0",
   "description": "Search Mendix List views using a single-field search",
   "copyright": "Mendix BV",

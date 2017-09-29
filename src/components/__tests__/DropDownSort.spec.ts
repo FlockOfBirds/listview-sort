@@ -1,15 +1,15 @@
 import { shallow } from "enzyme";
 import { createElement } from "react";
 
-import { Dropdown, DropdownProps } from "../Dropdown";
+import { DropDown, DropDownProps } from "../DropDownSort";
 import { OptionHTMLAttributesType, createOptionProps, parseStyle } from "../../utils/ContainerUtils";
 
 describe("Dropdown", () => {
 
-    const renderDropdown = (props: DropdownProps) => shallow(createElement(Dropdown, props));
+    const renderDropdown = (props: DropDownProps) => shallow(createElement(DropDown, props));
 
-    const dropDownProps: DropdownProps = {
-        onDropdownChangeAction: value => value,
+    const dropDownProps: DropDownProps = {
+        onDropDownChangeAction: () => jasmine.any(Function) as any,
         options: createOptionProps([
             { caption: "Name Asc", name: "Name", defaultSelected: true, sort: "asc" },
             { caption: "Name Desc", name: "Name", defaultSelected: false, sort: "desc" },
@@ -18,7 +18,7 @@ describe("Dropdown", () => {
         style: parseStyle("html{}")
     };
 
-    const createOptions = (props: DropdownProps) => {
+    const createOptions = (props: DropDownProps) => {
         return props.options.map((optionObject) => {
             const { caption, value } = optionObject;
             const optionValue: OptionHTMLAttributesType = {
@@ -46,7 +46,7 @@ describe("Dropdown", () => {
     });
 
     it("renders with the specified default sort", () => {
-        const props: DropdownProps = {
+        const props: DropDownProps = {
             ...dropDownProps,
             options: createOptionProps([
                 { caption: "Name Asc", name: "Name", defaultSelected: false, sort: "asc" },
@@ -63,13 +63,13 @@ describe("Dropdown", () => {
     describe("select", () => {
         it("changes value", (done) => {
             const newValue = "Code";
-            const props: DropdownProps = {
+            const props: DropDownProps = {
                 ...dropDownProps,
-                onDropdownChangeAction: value => value
+                onDropDownChangeAction: value => value
             };
-            spyOn(props, "onDropdownChangeAction").and.callThrough();
+            spyOn(props, "onDropDownChangeAction").and.callThrough();
             const wrapper = renderDropdown(props);
-            const select: any = wrapper.find("select");
+            const select = wrapper.find("select");
 
             select.simulate("change", {
                 currentTarget: {
@@ -78,20 +78,20 @@ describe("Dropdown", () => {
             });
 
             setTimeout(() => {
-                expect(props.onDropdownChangeAction).toHaveBeenCalledWith(newValue, "desc");
+                expect(props.onDropDownChangeAction).toHaveBeenCalledWith(newValue, "desc");
                 done();
             }, 1000);
         });
 
         it("updates when the select option changes", (done) => {
             const newValue = "Code";
-            const props: DropdownProps = {
+            const props: DropDownProps = {
                 ...dropDownProps,
-                onDropdownChangeAction: value => value
+                onDropDownChangeAction: value => value
             };
-            spyOn(props, "onDropdownChangeAction").and.callThrough();
+            spyOn(props, "onDropDownChangeAction").and.callThrough();
             const wrapper = renderDropdown(props);
-            const select: any = wrapper.find("select");
+            const select = wrapper.find("select");
 
             select.simulate("change", {
                 currentTarget: {
@@ -100,7 +100,7 @@ describe("Dropdown", () => {
             });
 
             setTimeout(() => {
-                expect(props.onDropdownChangeAction).toHaveBeenCalledWith("Name", "asc");
+                expect(props.onDropDownChangeAction).toHaveBeenCalledWith("Name", "asc");
 
                 select.simulate("change", {
                     currentTarget: {
@@ -109,7 +109,7 @@ describe("Dropdown", () => {
                 });
 
                 setTimeout(() => {
-                    expect(props.onDropdownChangeAction).toHaveBeenCalledWith(newValue, "desc");
+                    expect(props.onDropDownChangeAction).toHaveBeenCalledWith(newValue, "desc");
                     done();
                 }, 1000);
             }, 1000);

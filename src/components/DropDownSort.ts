@@ -2,13 +2,13 @@ import { Component, FormEvent, ReactElement, createElement } from "react";
 
 import { AttributeType, OptionHTMLAttributesType } from "../utils/ContainerUtils";
 
-export interface DropdownOptionType extends AttributeType {
+export interface DropDownOptionType extends AttributeType {
     value: string;
 }
 
-export interface DropdownProps {
-    onDropdownChangeAction?: (attribute: string, order: string) => void;
-    options: DropdownOptionType[];
+export interface DropDownProps {
+    onDropDownChangeAction?: (attribute: string, order: string) => void;
+    options: DropDownOptionType[];
     style: object;
 }
 
@@ -16,8 +16,8 @@ export interface DropdownState {
     value: string;
 }
 
-export class Dropdown extends Component<DropdownProps, DropdownState> {
-    constructor(props: DropdownProps) {
+export class DropDown extends Component<DropDownProps, DropdownState> {
+    constructor(props: DropDownProps) {
         super(props);
 
         this.state = { value: this.getDefaultValue() };
@@ -79,8 +79,8 @@ export class Dropdown extends Component<DropdownProps, DropdownState> {
         const options = this.props.options.filter((optionFilter => optionFilter.value === value));
         const option = options.pop();
 
-        if (option && this.props.onDropdownChangeAction) {
-            this.props.onDropdownChangeAction(option.name, option.sort);
+        if (option && this.props.onDropDownChangeAction) {
+            this.props.onDropDownChangeAction(option.name, option.sort);
         }
     }
 }

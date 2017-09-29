@@ -16,7 +16,7 @@ export class ValidateConfigs extends Component<ValidateConfigProps, {}> {
     render() {
         return createElement(Alert, {
             bootstrapStyle: "danger",
-            className: "widget-dropdown-sort-alert",
+            className: "widget-drop-down-sort-alert",
             message: this.props.validate ? ValidateConfigs.validate(this.props) : ""
         });
     }

@@ -4,13 +4,13 @@ import * as dijitRegistry from "dijit/registry";
 import * as classNames from "classnames";
 import * as dojoConnect from "dojo/_base/connect";
 
-import { Dropdown, DropdownProps } from "./Dropdown";
+import { DropDown, DropDownProps } from "./DropDownSort";
 import { ValidateConfigs } from "./ValidateConfigs";
-import { DropdownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
+import { DropDownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
 
-import "../ui/DropdownSort.scss";
+import "../ui/DropDownSort.scss";
 
-export default class DropdownSort extends Component<WrapperProps, DropdownSortState> {
+export default class DropDownSortContainer extends Component<WrapperProps, DropDownSortState> {
     private navigationHandler: object;
 
     constructor(props: WrapperProps) {
@@ -37,18 +37,24 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
                 targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
             }),
-            this.renderDropdown()
+            this.renderDropDown()
         );
+    }
+
+    componentDidMount() {
+        const queryNode = findDOMNode(this).parentNode as HTMLElement;
+        const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
+        this.showLoader(targetNode);
     }
 
     componentWillUnmount() {
         dojoConnect.disconnect(this.navigationHandler);
     }
 
-    private renderDropdown(): ReactElement<DropdownProps> | null {
+    private renderDropDown(): ReactElement<DropDownProps> | null {
         if (this.state.validationPassed) {
-            return createElement(Dropdown, {
-                onDropdownChangeAction: this.updateSort,
+            return createElement(DropDown, {
+                onDropDownChangeAction: this.updateSort,
                 options: createOptionProps(this.props.sortAttributes),
                 style: parseStyle(this.props.style)
             });
@@ -92,12 +98,6 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
                 this.hideLoader(targetNode);
             });
         }
-    }
-
-    componentDidMount() {
-        const queryNode = findDOMNode(this).parentNode as HTMLElement;
-        const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
-        this.showLoader(targetNode);
     }
 
     private showLoader(node?: HTMLElement) {

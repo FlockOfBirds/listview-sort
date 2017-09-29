@@ -1,6 +1,6 @@
 import { OptionHTMLAttributes } from "react";
 
-import { DropdownOptionType } from "../components/Dropdown";
+import { DropDownOptionType } from "../components/DropDownSort";
 
 export interface AttributeType { name: string; caption: string; defaultSelected: boolean; sort: string; }
 
@@ -12,7 +12,7 @@ export interface WrapperProps {
     style: string;
 }
 
-export interface DropdownSortState {
+export interface DropDownSortState {
     alertMessage?: string;
     targetListView?: ListView;
     targetNode?: HTMLElement;
@@ -34,7 +34,7 @@ export interface ListView extends mxui.widget._WidgetBase {
 
 export interface OptionHTMLAttributesType extends OptionHTMLAttributes<HTMLOptionElement> { key: string; }
 
-export const createOptionProps = (sortAttributes: AttributeType[]): DropdownOptionType[] => sortAttributes.map((optionObject, index) => {
+export const createOptionProps = (sortAttributes: AttributeType[]): DropDownOptionType[] => sortAttributes.map((optionObject, index) => {
     const { name, caption, defaultSelected, sort } = optionObject;
     const value = `${name}-${index}`;
     return { name, caption, defaultSelected, sort, value };

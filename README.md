@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/mendixlabs/listview-filter/branch/master/graph/listview-filter.svg)](https://codecov.io/gh/mendixlabs/listview-filter)
 ![badge](https://img.shields.io/badge/mendix-7.6.0-green.svg)
 
-# Dropdown sort
+# Drop-down sort
 
 Add an interactive sort to your list view.
 It supports sorting on a single field similar to the built-in list view sort capabilities.
