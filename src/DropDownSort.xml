@@ -5,8 +5,8 @@
     <icon>iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAatJREFUKBWNUr9rwmAQvcQoDrZZdHKrpUM6uBYcLO3u4OrmIF1FKHHSTSy4J6uD/4GOpThlt0iRDk6CIGhw8Xd672hCaCs0cLm7d+/d3ffxKXTmazab11x6YHvl+PMvmvoXCOHhcHhsNBo2/HejX1TFNM0rz/PuuHIRrrZaLYtxUhSF6vX6U7jG8Zpxh2q1Wmk2m73zBC9s+/3e8y2MIwYfOm23210mk8lbBn80P5+CDx3Eyul0ouPxSMPhkBaLBWmaRoVCIVB3u12JE4kEFYtFiaHTeLVAnMvlpGDbtjTz1aVSiSaTCc3nc8FxD9Cp6ICpsF6vR5Zl0Wq1krzdbovHNv1+n7LZrOTgQqduNptg8mg0onK5HIir1aqQB4MB5fN5isfjkuOY0Gnb7TYQp1IpwjRVVWXNTCYjm2Nlx3Ek7nQ6FIlECDotPLlSqfjHFI/18PFbEI8fMH+yulwu19Pp9CMajcot46ZhIPnmY/DggQ+dkk6nb7jTPd+gHrTnYDwev7iuS7quk2EYz+EavzyXj/YWxoI4FosZbCZ39+CRB8V/BgZ3x2HPCr8AF+ww9afJbZkAAAAASUVORK5CYII=</icon>
     <properties>
         <property key="entity" type="entity">
-            <caption>List view entity</caption>
-            <category>General</category>
+            <caption>List view with entity</caption>
+            <category>Data source</category>
             <description>Entity whose attributes will be sorted. This entity should match the list view entity</description>
         </property>
         <property key="sortAttributes" type="object" isList="true" required="false">
