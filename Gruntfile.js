@@ -9,6 +9,8 @@ const webpackConfigRelease = webpackConfig.map(config => merge(config, {
 
 module.exports = function(grunt) {
     const pkg = grunt.file.readJSON("package.json");
+    const widgetName = pkg.widgetName;
+
     grunt.initConfig({
 
         watch: {
@@ -24,7 +26,7 @@ module.exports = function(grunt) {
         compress: {
             dist: {
                 options: {
-                    archive: "./dist/" + pkg.version + "/" + pkg.widgetName + ".mpk",
+                    archive: "./dist/" + pkg.version + "/" + widgetName + ".mpk",
                     mode: "zip"
                 },
                 files: [ {
@@ -50,7 +52,7 @@ module.exports = function(grunt) {
                 files: [ {
                     dest: "./dist/MxTestProject/widgets",
                     cwd: "./dist/" + pkg.version + "/",
-                    src: [ pkg.widgetName + ".mpk" ],
+                    src: [ widgetName + ".mpk" ],
                     expand: true
                 } ]
             }
@@ -59,8 +61,8 @@ module.exports = function(grunt) {
         file_append: {
             addSourceURL: {
                 files: [ {
-                    append: "\n\n//# sourceURL=" + pkg.widgetName + ".webmodeler.js\n",
-                    input: "dist/tmp/src/" + pkg.widgetName + ".webmodeler.js"
+                    append: "\n\n//# sourceURL=" + widgetName + ".webmodeler.js\n",
+                    input: "dist/tmp/src/" + widgetName + ".webmodeler.js"
                 } ]
             }
         },
@@ -72,10 +74,10 @@ module.exports = function(grunt) {
 
         clean: {
             build: [
-                "./dist/" + pkg.version + "/" + pkg.widgetName + "/*",
+                "./dist/" + pkg.version + "/" + widgetName + "/*",
                 "./dist/tmp/**/*",
-                "./dist/MxTestProject/deployment/web/widgets/" + pkg.widgetName + "/*",
-                "./dist/MxTestProject/widgets/" + pkg.widgetName + ".mpk",
+                "./dist/MxTestProject/deployment/web/widgets/" + widgetName + "/*",
+                "./dist/MxTestProject/widgets/" + widgetName + ".mpk",
                 "./dist/wdio/**/*"
             ]
         },

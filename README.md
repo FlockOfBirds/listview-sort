@@ -2,7 +2,7 @@
 [![Dependency Status](https://david-dm.org/mendixlabs/listview-filter.svg)](https://david-dm.org/mendixlabs/listview-filter)
 [![Dev Dependency Status](https://david-dm.org/mendixlabs/listview-filter.svg#info=devDependencies)](https://david-dm.org/mendixlabs/listview-filter#info=devDependencies)
 [![codecov](https://codecov.io/gh/mendixlabs/listview-filter/branch/master/graph/listview-filter.svg)](https://codecov.io/gh/mendixlabs/listview-filter)
-![badge](https://img.shields.io/badge/mendix-7.6.0-green.svg)
+![badge](https://img.shields.io/badge/mendix-7.7.1-green.svg)
 
 # Drop-down sort
 
@@ -15,7 +15,7 @@ It supports sorting on a single field similar to the built-in list view sort cap
 * If no default select option is specified the widget will always select the first one.
 
 ## Dependencies
-Mendix 7.6
+Mendix 7.7.1
 
 ## Demo project
 
@@ -28,7 +28,7 @@ Mendix 7.6
 ### Data source configuration
 
 ![Data source](/assets/Datasource.png)
- - On the `List view entity` option of the `Data source` tab, browse and 
+ - On the `List view with entity` option of the `Data source` tab, browse and 
  select the "entity" property of the list widget you want to sort.
  This `entity` must be the one used on the list view.
  
