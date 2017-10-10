@@ -1,7 +1,6 @@
 .widget-drop-down-sort {
     select {
         display: inline-block;
-        padding-left: 30px;
     }
 }
 
@@ -10,6 +9,7 @@
 }
 
 .widget-drop-down-sort-loading {
+    background-color: white;
     background-image: url(./loading.gif);
     background-repeat: no-repeat;
     background-position: center top;
