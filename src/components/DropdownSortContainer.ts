@@ -6,13 +6,15 @@ import * as dojoConnect from "dojo/_base/connect";
 
 import { Dropdown, DropdownProps } from "./Dropdown";
 import { ValidateConfigs } from "./ValidateConfigs";
-import { DropdownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
+import { DropdownSortState, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
 import { PreLoader } from "./PreLoader";
+import { DataSourceHelper, ListView } from "../utils/DataSourceHelper/DataSourceHelper";
 
 import "../ui/DropdownSort.scss";
 
 export default class DropdownSort extends Component<WrapperProps, DropdownSortState> {
     private navigationHandler: object;
+    private dataSourceHelper: DataSourceHelper;
 
     constructor(props: WrapperProps) {
         super(props);
@@ -67,50 +69,63 @@ export default class DropdownSort extends Component<WrapperProps, DropdownSortSt
             let targetListView: ListView | null = null;
 
             if (targetNode) {
-                this.setState({ targetNode });
-                this.showPreLoader();
                 targetListView = dijitRegistry.byNode(targetNode);
                 if (targetListView) {
-                    this.setState({ targetListView });
+                    if (!targetListView.__customWidgetDataSourceHelper) {
+                        try {
+                            targetListView.__customWidgetDataSourceHelper = new DataSourceHelper(targetListView);
+                        } catch (error) {
+                            this.setState({
+                                alertMessage: error.message,
+                                targetListView,
+                                targetNode
+                            });
+                        }
+                    } else if (!DataSourceHelper.checkVersionCompatible(targetListView.__customWidgetDataSourceHelper.version)) {
+                        this.setState({
+                            alertMessage: "DataSource compatibility issue"
+                        });
+                    }
+                    this.dataSourceHelper = targetListView.__customWidgetDataSourceHelper as DataSourceHelper;
+                    const validateMessage = ValidateConfigs.validate({
+                        ...this.props as WrapperProps,
+                        queryNode: targetNode,
+                        targetListview: targetListView,
+                        validate: !this.state.findingListviewWidget
+                    });
+
+                    this.setState({
+                        findingListviewWidget: false,
+                        targetListView,
+                        targetNode,
+                        validationPassed: !validateMessage
+                    });
                 }
             }
-
-            const validateMessage = ValidateConfigs.validate({
-                ...this.props as WrapperProps,
-                queryNode: this.state.targetNode,
-                targetListview: this.state.targetListView,
-                validate: !this.state.findingListviewWidget
-            });
-
-            this.setState({ findingListviewWidget: false, validationPassed: !validateMessage });
         }
     }
 
     private updateSort(attribute: string, order: string) {
         const { targetNode, targetListView, validationPassed } = this.state;
 
-        if (targetListView && targetNode && validationPassed) {
-            this.showPreLoader();
-            targetListView._datasource._sorting = [ [ attribute, order ] ];
-            targetListView.update(null, () => {
-                this.hidePreLoader();
-            });
+        if (targetListView && targetNode && validationPassed && this.dataSourceHelper) {
+            this.dataSourceHelper.setConstraint("sorting", this.props.friendlyId, [ attribute, order ]);
         }
     }
 
-    private showPreLoader() {
-        if (this.state.targetNode) {
-            this.state.targetNode.style.display = "none";
-        }
+    // private showPreLoader() {
+    //     if (this.state.targetNode) {
+    //         this.state.targetNode.style.display = "none";
+    //     }
 
-        this.setState({ isLoading: true });
-    }
+    //     this.setState({ isLoading: true });
+    // }
 
-    private hidePreLoader() {
-        if (this.state.targetNode) {
-            this.state.targetNode.style.display = "inline";
-        }
+    // private hidePreLoader() {
+    //     if (this.state.targetNode) {
+    //         this.state.targetNode.style.display = "inline";
+    //     }
 
-        this.setState({ isLoading: false });
-    }
+    //     this.setState({ isLoading: false });
+    // }
 }

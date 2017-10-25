@@ -1,7 +1,8 @@
 import { Component, createElement } from "react";
 
 import { Alert } from "./Alert";
-import { ListView, WrapperProps } from "../utils/ContainerUtils";
+import { WrapperProps } from "../utils/ContainerUtils";
+import { ListView } from "../utils/DataSourceHelper/DataSourceHelper";
 
 export interface ValidateConfigProps extends WrapperProps {
     inWebModeler?: boolean;

@@ -1,6 +1,7 @@
 import { OptionHTMLAttributes } from "react";
 
 import { DropdownOptionType } from "../components/Dropdown";
+import { ListView } from "./DataSourceHelper/DataSourceHelper";
 
 export interface AttributeType { name: string; caption: string; defaultSelected: boolean; sort: string; }
 
@@ -19,15 +20,6 @@ export interface DropdownSortState {
     targetNode?: HTMLElement;
     findingListviewWidget: boolean;
     validationPassed?: boolean;
-}
-
-export interface ListView extends mxui.widget._WidgetBase {
-    _datasource: {
-        _entity: string;
-        _sorting: string[][];
-    };
-    update: (obj: mendix.lib.MxObject | null, callback?: () => void) => void;
-    sequence: (sequence: string[], callback?: () => void) => void;
 }
 
 export interface OptionHTMLAttributesType extends OptionHTMLAttributes<HTMLOptionElement> { key: string; }

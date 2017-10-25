@@ -22,18 +22,18 @@ const widgetConfig = {
         rules: [
             { test: /\.ts$/, use: "ts-loader" },
             {
-                test: /\.css$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader"
-                })
-            },
-            {
-                test: /\.scss$/,
+                test: /\.s?css$/,
                 loader: ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: "css-loader!sass-loader"
                 })
+            },
+            {
+                test: /\.gif$/,
+                use: [ {
+                    loader: "url-loader",
+                    options: { limit: 8192 }
+                } ]
             }
         ]
     },
@@ -61,8 +61,7 @@ const previewConfig = {
     module: {
         rules: [
             { test: /\.ts$/, use: "ts-loader" },
-            { test: /\.css$/, loader: "raw-loader" },
-            { test: /\.scss$/, use: [
+            { test: /\.s?css$/, use: [
                 { loader: "raw-loader" },
                 { loader: "sass-loader" }
             ] }
