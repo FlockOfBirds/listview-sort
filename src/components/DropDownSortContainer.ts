@@ -6,12 +6,14 @@ import * as dojoConnect from "dojo/_base/connect";
 
 import { DropDown, DropDownProps } from "./DropDownSort";
 import { ValidateConfigs } from "./ValidateConfigs";
-import { DropDownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
+import { DropDownSortState, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
+import { DataSourceHelper, ListView } from "../utils/DataSourceHelper/DataSourceHelper";
 
 import "../ui/DropDownSort.scss";
 
 export default class DropDownSortContainer extends Component<WrapperProps, DropDownSortState> {
     private navigationHandler: object;
+    private dataSourceHelper: DataSourceHelper;
 
     constructor(props: WrapperProps) {
         super(props);
@@ -44,7 +46,7 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
     componentDidMount() {
         const queryNode = findDOMNode(this).parentNode as HTMLElement;
         const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
-        this.showLoader(targetNode);
+        DataSourceHelper.showLoader(targetNode);
     }
 
     componentWillUnmount() {
@@ -70,45 +72,47 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
             let targetListView: ListView | null = null;
 
             if (targetNode) {
-                this.setState({ targetNode });
                 targetListView = dijitRegistry.byNode(targetNode);
                 if (targetListView) {
-                    this.setState({ targetListView });
+                    if (!targetListView.__customWidgetDataSourceHelper) {
+                        try {
+                            targetListView.__customWidgetDataSourceHelper = new DataSourceHelper(targetListView);
+                        } catch (error) {
+                            this.setState({
+                                alertMessage: error.message,
+                                targetListView,
+                                targetNode
+                            });
+                        }
+                    } else if (!DataSourceHelper.checkVersionCompatible(targetListView.__customWidgetDataSourceHelper.version)) {
+                        this.setState({
+                            alertMessage: "DataSource compatibility issue"
+                        });
+                    }
+                    this.dataSourceHelper = targetListView.__customWidgetDataSourceHelper as DataSourceHelper;
+                    const validateMessage = ValidateConfigs.validate({
+                        ...this.props as WrapperProps,
+                        queryNode: targetNode,
+                        targetListview: targetListView,
+                        validate: !this.state.findingListviewWidget
+                    });
+
+                    this.setState({
+                        findingListviewWidget: false,
+                        targetListView,
+                        targetNode,
+                        validationPassed: !validateMessage
+                    });
                 }
             }
-
-            const validateMessage = ValidateConfigs.validate({
-                ...this.props as WrapperProps,
-                queryNode: this.state.targetNode,
-                targetListview: this.state.targetListView,
-                validate: !this.state.findingListviewWidget
-            });
-
-            this.setState({ findingListviewWidget: false, validationPassed: !validateMessage });
         }
     }
 
     private updateSort(attribute: string, order: string) {
         const { targetNode, targetListView, validationPassed } = this.state;
 
-        if (targetListView && targetNode && validationPassed) {
-            this.showLoader(targetNode);
-            targetListView._datasource._sorting = [ [ attribute, order ] ];
-            targetListView.update(null, () => {
-                this.hideLoader(targetNode);
-            });
-        }
-    }
-
-    private showLoader(node?: HTMLElement) {
-        if (node) {
-            node.classList.add("widget-drop-down-sort-loading");
-        }
-    }
-
-    private hideLoader(node?: HTMLElement) {
-        if (node) {
-            node.classList.remove("widget-drop-down-sort-loading");
+        if (targetListView && targetNode && validationPassed && this.dataSourceHelper) {
+            this.dataSourceHelper.setConstraint("sorting", this.props.friendlyId, [ attribute, order ]);
         }
     }
 }
