@@ -36,56 +36,76 @@ export interface ListView extends mxui.widget._WidgetBase {
 export class DataSourceHelper {
     // The version of a Datasource is static, it never changes.
     static VERSION: Version = { major: 1, minor: 0, patch: 0 };
-    // The static data source version is made publicly accessible through this variable on dataSourceHelper instances.
+    // Expose the version dataSourceHelper instances.
     public version: Version = DataSourceHelper.VERSION;
     private delay = 50;
     private timeoutHandle?: number;
     private store: ConstraintStore = { constraints: {}, sorting: {} };
     private widget: ListView;
-    private running = false;
-    private isConstraintChanged = false;
+    private updateInProgress = false;
+    private requiresUpdate = false;
+    private widgetVersionRegister: {
+        [version: string]: string[];
+    } = {};
 
-    constructor(widget: ListView) {
+    constructor(widget: ListView, widgetId: string) {
         this.widget = widget;
+        this.widgetVersionRegister[`${this.version.major}`] = [widgetId];
         this.compatibilityCheck();
         this.showLoader();
     }
 
-    setConstraint(listViewProperty: "constraints" | "sorting", widgetId: string, constraint: string | HybridConstraint | string[]) {
-        if (listViewProperty === "constraints") {
-            this.store.constraints[widgetId] = constraint as string | HybridConstraint;
-        } else {
-            this.store.sorting[widgetId] = constraint as string[];
-        }
+    setSorting(widgetId: string, sortConstraint: string[]) {
+        this.store.sorting[widgetId] = sortConstraint;
+        this.registerUpdate();
+    }
 
+    setConstraint(widgetId: string, constraint: string | HybridConstraint) {
+        this.store.constraints[widgetId] = constraint as string | HybridConstraint;
+        this.registerUpdate();
+    }
+
+    registerUpdate() {
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
         }
-        if (!this.running) {
+        if (!this.updateInProgress) {
             this.timeoutHandle = window.setTimeout(() => {
-                this.running = true;
-                // TODO Check if there's currently no update happening on the listView.
-                // If there's an update running set a timeout and try it out later.
-                this.iterativeApplyConstraint();
+                this.updateInProgress = true;
+                // TODO Check if there's currently no update happening on the listView coming from another
+                // Feature/functionality/widget which does not use DataSourceHelper
+                this.iterativeUpdateDataSource();
           }, this.delay);
         } else {
-            this.isConstraintChanged = true;
+            this.requiresUpdate = true;
         }
     }
 
-    private iterativeApplyConstraint() {
-        this.applyConstraint(() => {
-            if (this.isConstraintChanged) {
-                this.isConstraintChanged = false;
-                this.iterativeApplyConstraint();
+    private iterativeUpdateDataSource() {
+        this.updateDataSource(() => {
+            if (this.requiresUpdate) {
+                this.requiresUpdate = false;
+                this.iterativeUpdateDataSource();
             } else {
-                this.running = false;
+                this.updateInProgress = false;
             }
         });
     }
 
-    public static checkVersionCompatible(version: Version): boolean {
-        return this.VERSION.major === version.major;
+    versionCompatibility(version: Version, widgetId: string): string {
+        this.widgetVersionRegister[`${version.major}`] = this.widgetVersionRegister[`${version.major}`] || []
+        this.widgetVersionRegister[`${version.major}`].push(widgetId);
+        const maxVersion = Math.max(...Object.keys(this.widgetVersionRegister).map(value => Number(value)));
+
+        if (maxVersion !== version.major) {
+            const widgetsToUpdate = { ...this.widgetVersionRegister };
+            delete widgetsToUpdate[`${maxVersion}`];
+            const widgetsToUpdateList = Object.keys(widgetsToUpdate).map(key => widgetsToUpdate[key]).join(",");
+
+            return `Update widgets: ${widgetsToUpdateList} to version ${maxVersion}`;
+        }
+
+        return "";
     }
 
     private compatibilityCheck() {
@@ -95,7 +115,7 @@ export class DataSourceHelper {
         }
     }
 
-    private applyConstraint(callback: () => void) {
+    private updateDataSource(callback: () => void) {
         let constraints: HybridConstraint[] | string;
         const sorting: string[][] = Object.keys(this.store.sorting)
             .map(key => this.store.sorting[key])

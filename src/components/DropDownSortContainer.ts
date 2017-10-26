@@ -76,7 +76,7 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
                 if (targetListView) {
                     if (!targetListView.__customWidgetDataSourceHelper) {
                         try {
-                            targetListView.__customWidgetDataSourceHelper = new DataSourceHelper(targetListView);
+                            targetListView.__customWidgetDataSourceHelper = new DataSourceHelper(targetListView, this.props.friendlyId);
                         } catch (error) {
                             this.setState({
                                 alertMessage: error.message,
@@ -84,12 +84,11 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
                                 targetNode
                             });
                         }
-                    } else if (!DataSourceHelper.checkVersionCompatible(targetListView.__customWidgetDataSourceHelper.version)) {
-                        this.setState({
-                            alertMessage: "DataSource compatibility issue"
-                        });
                     }
                     this.dataSourceHelper = targetListView.__customWidgetDataSourceHelper as DataSourceHelper;
+                    const versionCompatibilityMessage = this.dataSourceHelper
+                                                            .versionCompatibility(DataSourceHelper.VERSION, this.props.friendlyId);
+
                     const validateMessage = ValidateConfigs.validate({
                         ...this.props as WrapperProps,
                         queryNode: targetNode,
@@ -98,6 +97,7 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
                     });
 
                     this.setState({
+                        alertMessage: versionCompatibilityMessage,
                         findingListviewWidget: false,
                         targetListView,
                         targetNode,
@@ -112,7 +112,7 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
         const { targetNode, targetListView, validationPassed } = this.state;
 
         if (targetListView && targetNode && validationPassed && this.dataSourceHelper) {
-            this.dataSourceHelper.setConstraint("sorting", this.props.friendlyId, [ attribute, order ]);
+            this.dataSourceHelper.setSorting(this.props.friendlyId, [ attribute, order ]);
         }
     }
 }
