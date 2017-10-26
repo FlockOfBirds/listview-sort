@@ -46,7 +46,7 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
     componentDidMount() {
         const queryNode = findDOMNode(this).parentNode as HTMLElement;
         const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
-        this.showLoader(targetNode);
+        DataSourceHelper.showLoader(targetNode);
     }
 
     componentWillUnmount() {
@@ -115,20 +115,4 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
             this.dataSourceHelper.setConstraint("sorting", this.props.friendlyId, [ attribute, order ]);
         }
     }
-
-    // private showPreLoader() {
-    //     if (this.state.targetNode) {
-    //         this.state.targetNode.style.display = "none";
-    //     }
-
-    //     this.setState({ isLoading: true });
-    // }
-
-    // private hidePreLoader() {
-    //     if (this.state.targetNode) {
-    //         this.state.targetNode.style.display = "inline";
-    //     }
-
-    //     this.setState({ isLoading: false });
-    // }
 }

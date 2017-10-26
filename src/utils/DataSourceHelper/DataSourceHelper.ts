@@ -123,7 +123,12 @@ export class DataSourceHelper {
         this.widget.domNode.classList.add("widget-data-source-helper-loading");
     }
 
+    static showLoader(targetNode: HTMLElement) {
+        targetNode.classList.add("widget-data-source-helper-loading");
+    }
+
     private hideLoader() {
         this.widget.domNode.classList.remove("widget-data-source-helper-loading");
     }
+
 }
