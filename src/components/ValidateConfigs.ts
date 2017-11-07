@@ -2,13 +2,14 @@ import { Component, createElement } from "react";
 
 import { Alert } from "./Alert";
 import { WrapperProps } from "../utils/ContainerUtils";
-import { ListView } from "../utils/DataSourceHelper/DataSourceHelper";
+import { ListView } from "mendix-data-source-helper";
 
 export interface ValidateConfigProps extends WrapperProps {
     inWebModeler?: boolean;
     queryNode?: HTMLElement;
     targetListview?: ListView;
     validate: boolean;
+    message?: string;
 }
 
 const showAlert = (friendlyId: string, message: string) => `Custom widget ${friendlyId} Error in configuration: ${message}`;
@@ -18,7 +19,7 @@ export class ValidateConfigs extends Component<ValidateConfigProps, {}> {
         return createElement(Alert, {
             bootstrapStyle: "danger",
             className: "widget-drop-down-sort-alert",
-            message: this.props.validate ? ValidateConfigs.validate(this.props) : ""
+            message: this.props.validate ? ValidateConfigs.validate(this.props) || this.props.message : ""
         });
     }
 

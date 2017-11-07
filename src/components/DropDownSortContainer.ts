@@ -7,7 +7,7 @@ import * as dojoConnect from "dojo/_base/connect";
 import { DropDown, DropDownProps } from "./DropDownSort";
 import { ValidateConfigs } from "./ValidateConfigs";
 import { DropDownSortState, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
-import { DataSourceHelper, ListView } from "../utils/DataSourceHelper/DataSourceHelper";
+import { DataSourceHelper, ListView } from "mendix-data-source-helper";
 
 import "../ui/DropDownSort.scss";
 
@@ -35,6 +35,7 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
             },
             createElement(ValidateConfigs, {
                 ...this.props as WrapperProps,
+                message: this.state.alertMessage,
                 queryNode: this.state.targetNode,
                 targetListview: this.state.targetListView,
                 validate: !this.state.findingListviewWidget
@@ -46,7 +47,7 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
     componentDidMount() {
         const queryNode = findDOMNode(this).parentNode as HTMLElement;
         const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
-        DataSourceHelper.showLoader(targetNode);
+        DataSourceHelper.hideContent(targetNode);
     }
 
     componentWillUnmount() {
@@ -54,7 +55,7 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
     }
 
     private renderDropDown(): ReactElement<DropDownProps> | null {
-        if (this.state.validationPassed) {
+        if (this.state.alertMessage) {
             return createElement(DropDown, {
                 onDropDownChangeAction: this.updateSort,
                 options: createOptionProps(this.props.sortAttributes),
@@ -70,26 +71,18 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
             const queryNode = findDOMNode(this).parentNode as HTMLElement;
             const targetNode = ValidateConfigs.findTargetNode(queryNode);
             let targetListView: ListView | null = null;
+            let errorMessage = "";
 
             if (targetNode) {
                 targetListView = dijitRegistry.byNode(targetNode);
                 if (targetListView) {
-                    if (!targetListView.__customWidgetDataSourceHelper) {
-                        try {
-                            targetListView.__customWidgetDataSourceHelper = new DataSourceHelper(targetListView, this.props.friendlyId);
-                        } catch (error) {
-                            this.setState({
-                                alertMessage: error.message,
-                                targetListView,
-                                targetNode
-                            });
-                        }
+                    try {
+                        this.dataSourceHelper = new DataSourceHelper(targetNode, targetListView, this.props.friendlyId, DataSourceHelper.VERSION);
+                    } catch (error) {
+                        errorMessage = error.message;
                     }
-                    this.dataSourceHelper = targetListView.__customWidgetDataSourceHelper as DataSourceHelper;
-                    const versionCompatibilityMessage = this.dataSourceHelper
-                                                            .versionCompatibility(DataSourceHelper.VERSION, this.props.friendlyId);
 
-                    const validateMessage = ValidateConfigs.validate({
+                    const validationMessage = ValidateConfigs.validate({
                         ...this.props as WrapperProps,
                         queryNode: targetNode,
                         targetListview: targetListView,
@@ -97,11 +90,11 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
                     });
 
                     this.setState({
-                        alertMessage: versionCompatibilityMessage,
+                        alertMessage: validationMessage || errorMessage,
                         findingListviewWidget: false,
                         targetListView,
                         targetNode,
-                        validationPassed: !validateMessage
+                        validationPassed: !validationMessage
                     });
                 }
             }

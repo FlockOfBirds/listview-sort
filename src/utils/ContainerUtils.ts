@@ -1,7 +1,7 @@
 import { OptionHTMLAttributes } from "react";
 
 import { DropDownOptionType } from "../components/DropDownSort";
-import { ListView } from "./DataSourceHelper/DataSourceHelper";
+import { ListView } from "mendix-data-source-helper";
 
 export interface AttributeType { name: string; caption: string; defaultSelected: boolean; sort: string; }
 
