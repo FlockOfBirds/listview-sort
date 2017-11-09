@@ -103,7 +103,7 @@ export default class DropDownSortContainer extends Component<ContainerProps, Con
             targetListView = dijitRegistry.byNode(targetNode);
             if (targetListView) {
                 try {
-                    this.dataSourceHelper = new DataSourceHelper(targetNode, targetListView, this.props.friendlyId, DataSourceHelper.VERSION);
+                    this.dataSourceHelper = DataSourceHelper.getInstance(targetListView, this.props.friendlyId, DataSourceHelper.VERSION);
                 } catch (error) {
                     errorMessage = error.message;
                 }
