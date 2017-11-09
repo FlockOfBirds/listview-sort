@@ -1,6 +1,7 @@
 import { Component, FormEvent, ReactElement, createElement } from "react";
 
-import { AttributeType, OptionHTMLAttributesType } from "../utils/ContainerUtils";
+import { OptionHTMLAttributesType } from "../utils/ContainerUtils";
+import { AttributeType } from "./DropDownSortContainer";
 
 export interface DropDownOptionType extends AttributeType {
     value: string;
