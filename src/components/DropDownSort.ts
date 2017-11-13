@@ -1,6 +1,7 @@
 import { Component, FormEvent, ReactElement, createElement } from "react";
 
-import { AttributeType, OptionHTMLAttributesType } from "../utils/ContainerUtils";
+import { OptionHTMLAttributesType } from "../utils/ContainerUtils";
+import { AttributeType } from "./DropDownSortContainer";
 
 export interface DropDownOptionType extends AttributeType {
     value: string;
@@ -20,14 +21,20 @@ export class DropDown extends Component<DropDownProps, DropdownState> {
     constructor(props: DropDownProps) {
         super(props);
 
-        this.state = { value: this.getDefaultValue() };
+        this.state = { value: this.getDefaultValue(this.props) };
+
         this.handleChange = this.handleChange.bind(this);
         this.renderOptions = this.renderOptions.bind(this);
         this.callOnChangeAction = this.callOnChangeAction.bind(this);
-        this.getDefaultValue = this.getDefaultValue.bind(this);
 
-        this.callOnChangeAction(this.state.value);
+    }
 
+    componentWillReceiveProps(newProps: DropDownProps) {
+        const value = this.getDefaultValue(newProps);
+
+        if (this.state.value !== value) {
+            this.setState({ value });
+        }
     }
 
     render() {
@@ -40,16 +47,14 @@ export class DropDown extends Component<DropDownProps, DropdownState> {
         );
     }
 
-    private getDefaultValue(): string {
-        this.props.options.forEach((optionObject) => {
-            const { value, defaultSelected } = optionObject;
+    private getDefaultValue(props: DropDownProps): string {
+        const defaultOption = props.options.filter(option => option.defaultSelected)[0];
 
-            if (defaultSelected) {
-                return value;
-            }
-        });
+        if (defaultOption) {
+            return defaultOption.value;
+        }
 
-        return this.props.options[0].value;
+        return props.options[0].value;
     }
 
     private renderOptions(): Array<ReactElement<{}>> {

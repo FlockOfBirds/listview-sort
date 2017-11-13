@@ -1,7 +1,7 @@
 {
   "name": "drop-down-sort",
   "widgetName": "DropDownSort",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Search Mendix List views using a single-field search",
   "copyright": "Mendix BV",
   "scripts": {
@@ -71,7 +71,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.31",
     "karma-webpack": "^2.0.4",
-    "mendix-client": "^7.4.1",
+    "mendix-client": "^7.6.3",
     "mendix-widget-build-script": "^1.0.0-rc2",
     "node-sass": "^4.5.3",
     "nodemon": "^1.12.1",
@@ -100,6 +100,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "classnames": "^2.2.5"
+    "classnames": "^2.2.5",
+    "mendix-data-source-helper": "^0.1.2-rc2"
   }
 }

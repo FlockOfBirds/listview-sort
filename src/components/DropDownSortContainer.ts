@@ -4,38 +4,64 @@ import * as dijitRegistry from "dijit/registry";
 import * as classNames from "classnames";
 import * as dojoConnect from "dojo/_base/connect";
 
+import { Alert } from "./Alert";
 import { DropDown, DropDownProps } from "./DropDownSort";
-import { ValidateConfigs } from "./ValidateConfigs";
-import { DropDownSortState, ListView, WrapperProps, createOptionProps, parseStyle } from "../utils/ContainerUtils";
+import { Utils, createOptionProps, parseStyle } from "../utils/ContainerUtils";
+import { DataSourceHelper, ListView } from "mendix-data-source-helper";
 
 import "../ui/DropDownSort.scss";
 
-export default class DropDownSortContainer extends Component<WrapperProps, DropDownSortState> {
-    private navigationHandler: object;
+interface WrapperProps {
+    class: string;
+    style: string;
+    friendlyId: string;
+    mxform: mxui.lib.form._FormBase;
+    mxObject: mendix.lib.MxObject;
+}
 
-    constructor(props: WrapperProps) {
+export interface ContainerProps extends WrapperProps {
+    entity: string;
+    sortAttributes: AttributeType[];
+}
+
+export interface AttributeType {
+    name: string;
+    caption: string;
+    defaultSelected: boolean;
+    sort: string;
+}
+
+export interface ContainerState {
+    alertMessage?: string;
+    listViewAvailable: boolean;
+    targetListView?: ListView | null;
+    targetNode?: HTMLElement;
+}
+
+export default class DropDownSortContainer extends Component<ContainerProps, ContainerState> {
+    private navigationHandler: object;
+    private dataSourceHelper: DataSourceHelper;
+
+    constructor(props: ContainerProps) {
         super(props);
 
         this.state = {
-            alertMessage: "",
-            findingListviewWidget: true
+            alertMessage: Utils.validateProps(this.props),
+            listViewAvailable: false
         };
         this.updateSort = this.updateSort.bind(this);
-        this.validateListView = this.validateListView.bind(this);
-        this.navigationHandler = dojoConnect.connect(props.mxform, "onNavigation", this, this.validateListView);
+        this.navigationHandler = dojoConnect.connect(props.mxform, "onNavigation", this, this.connectToListView.bind(this));
     }
 
     render() {
-        return createElement("div",
-            {
+        return createElement("div", {
                 className: classNames("widget-drop-down-sort", this.props.class),
                 style: parseStyle(this.props.style)
             },
-            createElement(ValidateConfigs, {
-                ...this.props as WrapperProps,
-                queryNode: this.state.targetNode,
-                targetListview: this.state.targetListView,
-                validate: !this.state.findingListviewWidget
+            createElement(Alert, {
+                bootstrapStyle: "danger",
+                className: "widget-drop-down-sort-alert",
+                message: this.state.alertMessage
             }),
             this.renderDropDown()
         );
@@ -43,8 +69,20 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
 
     componentDidMount() {
         const queryNode = findDOMNode(this).parentNode as HTMLElement;
-        const targetNode = ValidateConfigs.findTargetNode(queryNode) as HTMLElement;
-        this.showLoader(targetNode);
+        const targetNode = Utils.findTargetNode(queryNode) as HTMLElement;
+
+        if (targetNode) {
+            DataSourceHelper.hideContent(targetNode);
+        }
+    }
+
+    componentDidUpdate(_prevProps: ContainerProps, prevState: ContainerState) {
+        if (this.state.listViewAvailable && !prevState.listViewAvailable) {
+            const selectedSort = this.props.sortAttributes.filter(sortAttribute => sortAttribute.defaultSelected)[0];
+            if (selectedSort) {
+                this.updateSort(selectedSort.name, selectedSort.sort);
+            }
+        }
     }
 
     componentWillUnmount() {
@@ -52,7 +90,7 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
     }
 
     private renderDropDown(): ReactElement<DropDownProps> | null {
-        if (this.state.validationPassed) {
+        if (!this.state.alertMessage) {
             return createElement(DropDown, {
                 onDropDownChangeAction: this.updateSort,
                 options: createOptionProps(this.props.sortAttributes),
@@ -63,52 +101,41 @@ export default class DropDownSortContainer extends Component<WrapperProps, DropD
         return null;
     }
 
-    private validateListView() {
-        if (!this.state.validationPassed) {
-            const queryNode = findDOMNode(this).parentNode as HTMLElement;
-            const targetNode = ValidateConfigs.findTargetNode(queryNode);
-            let targetListView: ListView | null = null;
+    private connectToListView() {
+        const queryNode = findDOMNode(this).parentNode as HTMLElement;
+        const targetNode = Utils.findTargetNode(queryNode) as HTMLElement;
+        let targetListView: ListView | null = null;
+        let errorMessage = "";
 
-            if (targetNode) {
-                this.setState({ targetNode });
-                targetListView = dijitRegistry.byNode(targetNode);
-                if (targetListView) {
-                    this.setState({ targetListView });
+        if (targetNode) {
+            targetListView = dijitRegistry.byNode(targetNode);
+            if (targetListView) {
+                try {
+                    this.dataSourceHelper = DataSourceHelper.getInstance(targetListView, this.props.friendlyId, DataSourceHelper.VERSION);
+                } catch (error) {
+                    errorMessage = error.message;
                 }
             }
-
-            const validateMessage = ValidateConfigs.validate({
-                ...this.props as WrapperProps,
-                queryNode: this.state.targetNode,
-                targetListview: this.state.targetListView,
-                validate: !this.state.findingListviewWidget
-            });
-
-            this.setState({ findingListviewWidget: false, validationPassed: !validateMessage });
         }
+
+        const validationMessage = Utils.validateCompatibility({
+            ...this.props as ContainerProps,
+            targetListView
+        });
+
+        this.setState({
+            alertMessage: validationMessage || errorMessage,
+            listViewAvailable: !!targetListView,
+            targetListView,
+            targetNode
+        });
     }
 
     private updateSort(attribute: string, order: string) {
-        const { targetNode, targetListView, validationPassed } = this.state;
+        const { targetNode, targetListView } = this.state;
 
-        if (targetListView && targetNode && validationPassed) {
-            this.showLoader(targetNode);
-            targetListView._datasource._sorting = [ [ attribute, order ] ];
-            targetListView.update(null, () => {
-                this.hideLoader(targetNode);
-            });
-        }
-    }
-
-    private showLoader(node?: HTMLElement) {
-        if (node) {
-            node.classList.add("widget-drop-down-sort-loading");
-        }
-    }
-
-    private hideLoader(node?: HTMLElement) {
-        if (node) {
-            node.classList.remove("widget-drop-down-sort-loading");
+        if (targetListView && targetNode && this.dataSourceHelper) {
+            this.dataSourceHelper.setSorting(this.props.friendlyId, [ attribute, order ]);
         }
     }
 }
