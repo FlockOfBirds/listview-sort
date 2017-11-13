@@ -33,7 +33,7 @@ export interface AttributeType {
 
 export interface ContainerState {
     alertMessage?: string;
-    listviewAvailable: boolean;
+    listViewAvailable: boolean;
     targetListView?: ListView | null;
     targetNode?: HTMLElement;
 }
@@ -47,11 +47,10 @@ export default class DropDownSortContainer extends Component<ContainerProps, Con
 
         this.state = {
             alertMessage: Utils.validateProps(this.props),
-            listviewAvailable: true
+            listViewAvailable: false
         };
         this.updateSort = this.updateSort.bind(this);
-        this.connectToListView = this.connectToListView.bind(this);
-        this.navigationHandler = dojoConnect.connect(props.mxform, "onNavigation", this, this.connectToListView);
+        this.navigationHandler = dojoConnect.connect(props.mxform, "onNavigation", this, this.connectToListView.bind(this));
     }
 
     render() {
@@ -74,6 +73,15 @@ export default class DropDownSortContainer extends Component<ContainerProps, Con
 
         if (targetNode) {
             DataSourceHelper.hideContent(targetNode);
+        }
+    }
+
+    componentDidUpdate(_prevProps: ContainerProps, prevState: ContainerState) {
+        if (this.state.listViewAvailable && !prevState.listViewAvailable) {
+            const selectedSort = this.props.sortAttributes.filter(sortAttribute => sortAttribute.defaultSelected)[0];
+            if (selectedSort) {
+                this.updateSort(selectedSort.name, selectedSort.sort);
+            }
         }
     }
 
@@ -117,7 +125,7 @@ export default class DropDownSortContainer extends Component<ContainerProps, Con
 
         this.setState({
             alertMessage: validationMessage || errorMessage,
-            listviewAvailable: !!targetListView,
+            listViewAvailable: !!targetListView,
             targetListView,
             targetNode
         });

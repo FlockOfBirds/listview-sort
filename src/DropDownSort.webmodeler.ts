@@ -1,19 +1,17 @@
 import { Component, createElement } from "react";
-import { findDOMNode } from "react-dom";
 
 import { Alert } from "./components/Alert";
 import { DropDown } from "./components/DropDownSort";
 import { Utils, createOptionProps, parseStyle } from "./utils/ContainerUtils";
-import { ContainerProps, ContainerState } from "./components/DropDownSortContainer";
+import { ContainerProps } from "./components/DropDownSortContainer";
 
 declare function require(name: string): string;
 
 // tslint:disable-next-line class-name
-export class preview extends Component<ContainerProps, ContainerState> {
+export class preview extends Component<ContainerProps, {}> {
     constructor(props: ContainerProps) {
         super(props);
 
-        this.state = { listviewAvailable: true };
     }
 
     render() {
@@ -27,14 +25,6 @@ export class preview extends Component<ContainerProps, ContainerState> {
         );
     }
 
-    componentDidMount() {
-        this.validateConfigs();
-    }
-
-    componentWillReceiveProps(_newProps: ContainerProps) {
-        this.validateConfigs();
-    }
-
     private renderAlert() {
         const message = Utils.validateProps({
             ...this.props as ContainerProps
@@ -45,16 +35,6 @@ export class preview extends Component<ContainerProps, ContainerState> {
             className: "widget-drop-down-filter-alert",
             message
         });
-    }
-
-    private validateConfigs() {
-        const routeNode = findDOMNode(this) as HTMLElement;
-        const targetNode = Utils.findTargetNode(routeNode);
-
-        if (targetNode) {
-            this.setState({ targetNode });
-        }
-        this.setState({ listviewAvailable: true });
     }
 }
 
